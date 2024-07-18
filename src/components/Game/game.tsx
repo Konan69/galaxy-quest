@@ -61,7 +61,7 @@ const Game: React.FC = () => {
       x: Math.random() * (GAME_WIDTH - OBSTACLE_SIZE),
       y: -OBSTACLE_SIZE,
       id: Date.now(),
-      health: 2,
+      health: 1,
     };
     setObstacles((prev) => [...prev, newObstacle]);
   }, []);
@@ -123,12 +123,11 @@ const Game: React.FC = () => {
                   proj.y + PROJECTILE_SIZE > obs.y
                 ) {
                   updatedProj.health -= 1;
-                  setScore((s) => s + 5);
                   if (obs.health === 1) {
-                    setScore((s) => s + 10);
+                    setScore((s) => s + 20);
                     return null; // Remove obstacle if health reaches zero
                   }
-                  return { ...obs, health: obs.health - 2 };
+                  return { ...obs, health: obs.health - 1 };
                 }
                 return obs;
               })
@@ -239,7 +238,7 @@ const Game: React.FC = () => {
         {obstacles.map((obs) => (
           <div
             key={obs.id}
-            className={`absolute rounded-full ${obs.health === 2 ? "bg-red-500" : "bg-red-300"}`}
+            className="absolute rounded-full bg-red-500 "
             style={{
               left: obs.x,
               top: obs.y,
