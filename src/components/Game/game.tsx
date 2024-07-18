@@ -85,7 +85,7 @@ const Game: React.FC = () => {
         .map((obs) => ({ ...obs, y: obs.y + 2 }))
         .filter((obs) => {
           if (obs.y + OBSTACLE_SIZE >= GAME_HEIGHT) {
-            setLives((l) => l - 0.5);
+            setLives((l) => l - 1);
             return false;
           }
           if (
@@ -94,7 +94,7 @@ const Game: React.FC = () => {
             shipPositionRef.current.y < obs.y + OBSTACLE_SIZE &&
             shipPositionRef.current.y + SHIP_SIZE > obs.y
           ) {
-            setLives((l) => l - 0.5);
+            setLives((l) => l - 1);
             return false;
           }
           return true;
