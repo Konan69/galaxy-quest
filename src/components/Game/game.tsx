@@ -128,7 +128,7 @@ const Game: React.FC = () => {
                     setScore((s) => s + 10);
                     return null; // Remove obstacle if health reaches zero
                   }
-                  return { ...obs, health: obs.health - 1 };
+                  return { ...obs, health: obs.health - 2 };
                 }
                 return obs;
               })
