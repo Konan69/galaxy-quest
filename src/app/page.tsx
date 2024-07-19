@@ -23,6 +23,16 @@ export default function Home() {
             TON Connect
           </Cell>
         </Link>
+        <Link href="/landing">
+          <Cell
+            before={
+              <Image src={tonSvg.src} style={{ backgroundColor: "#007AFF" }} />
+            }
+            subtitle="Landing page"
+          >
+            Landing
+          </Cell>
+        </Link>
         <Link href="/game">
           <Cell
             before={
