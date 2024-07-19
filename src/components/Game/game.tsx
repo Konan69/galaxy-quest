@@ -213,9 +213,6 @@ const Game: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white p-4">
-      <h1 className="text-3xl font-bold mb-4">
-        Galactic Quest: Daily Challenge
-      </h1>
       <div
         ref={gameAreaRef}
         className="relative bg-black border-4 border-purple-500 overflow-hidden touch-none"
