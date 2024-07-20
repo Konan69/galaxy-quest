@@ -1,15 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/utils";
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { username: string } },
-) {
-  const { username } = params;
+export async function GET(req: NextRequest) {
+  const username = req.nextUrl.searchParams.get("username");
+
+  if (!username) {
+    return NextResponse.json(
+      { error: "Username is required" },
+      { status: 400 },
+    );
+  }
 
   try {
-    const user = await prisma.user.findFirst({
+    const user = await prisma.user.findUnique({
       where: { username },
+      include: { purchases: true },
     });
 
     if (!user) {
@@ -28,7 +33,8 @@ export async function GET(
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { username } = body;
+  const { username, invitedBy }: { username: string; invitedBy?: string } =
+    body;
 
   if (!username) {
     return NextResponse.json(
@@ -38,9 +44,22 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const user = await prisma.user.create({
-      data: { username },
+    const user = await prisma.user.upsert({
+      where: { username },
+      update: {},
+      create: {
+        username,
+        invitedBy: invitedBy || undefined,
+      },
     });
+
+    // If there's an invitedBy, update the inviter's invites array
+    if (invitedBy) {
+      await prisma.user.update({
+        where: { id: invitedBy },
+        data: { invites: { push: user.id } },
+      });
+    }
 
     return NextResponse.json(user, { status: 201 });
   } catch (error) {
