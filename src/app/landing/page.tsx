@@ -1,19 +1,23 @@
 "use client";
 
-// cache the username, ui error handling for if user hasnt set username in telegram
-import { useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-
 import {
   DisplayData,
   DisplayDataRow,
 } from "@/components/DisplayData/DisplayData";
 import { useInitData, User } from "@telegram-apps/sdk-react";
 import { List } from "@telegram-apps/telegram-ui";
-import { useMemo, useEffect } from "react";
+import { useMemo, useEffect, useRef } from "react";
 
 // Function to fetch user data from the API
-const regUser = async (username: string) => {
+const fetchUser = async (username: string) => {
+  const { data } = await axios.get(`/api/user/${username}`);
+  return data;
+};
+
+// Function to create a new user
+const createUser = async (username: string) => {
   const { data } = await axios.post("/api/user", { username });
   return data;
 };
@@ -25,43 +29,63 @@ function getUserRows(user: User): DisplayDataRow[] {
   ];
 }
 
-export default function Landing() {
+export default function LandingClient() {
   const initData = useInitData();
-  const username = initData?.user?.username!;
+  const username = initData?.user?.username;
+  const queryClient = useQueryClient();
+  const userCreationAttempted = useRef(false);
 
   const {
-    mutate,
     data: user,
+    isError,
+    isLoading,
     error,
-  } = useMutation({
-    mutationFn: () => regUser(username!),
+    status,
+  } = useQuery({
+    queryKey: ["user", username],
+    queryFn: () => fetchUser(username!),
+    enabled: !!username,
+    staleTime: Infinity, // Cache the data indefinitely
+    retry: false, // Don't retry on error
+  });
+
+  const createUserMutation = useMutation({
+    mutationFn: createUser,
     onSuccess: (data) => {
-      console.log("User registered successfully:", data);
-    },
-    onError: (error) => {
-      console.error("Failed to register user:", error);
+      queryClient.setQueryData(["user", username], data);
     },
   });
 
-  // Trigger mutation when the username is available
   useEffect(() => {
-    if (username) {
-      mutate();
+    if (
+      status === "error" &&
+      axios.isAxiosError(error) &&
+      error.response?.status === 404 &&
+      !userCreationAttempted.current &&
+      username
+    ) {
+      userCreationAttempted.current = true;
+      createUserMutation.mutate(username);
     }
-  }, []);
+  }, [status, error, username, createUserMutation]);
 
   const userRows = useMemo<DisplayDataRow[] | undefined>(() => {
     return initData && initData.user ? getUserRows(initData.user) : undefined;
   }, [initData]);
 
-  if (error) return <div>Failed to load user data</div>;
-  console.log(error);
-  if (!user) return <div>Loading...</div>;
+  if (!username) return <div>Please set username in telegram</div>;
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) {
+    if (axios.isAxiosError(error) && error.response?.status === 404) {
+      return <div>User not found. Creating new user...</div>;
+    }
+    return <div>Failed to load user data</div>;
+  }
 
   return (
     <>
       <List>{userRows && <DisplayData header={"User"} rows={userRows} />}</List>
-      <div>{user.username}</div>
+      <div>{user?.username}</div>
     </>
   );
 }
