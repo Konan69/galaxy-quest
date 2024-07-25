@@ -7,6 +7,7 @@ import QueryClientProvider from "@/QueryClientProvider";
 import "@telegram-apps/telegram-ui/dist/styles.css";
 import "normalize.css/normalize.css";
 import "./_assets/globals.css";
+import Navbar from "@/components/NavBar/Navbar";
 
 export const metadata: Metadata = {
   title: "Your Application Title Goes Here",
@@ -20,6 +21,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
         <QueryClientProvider>
           <Root>{children}</Root>
         </QueryClientProvider>
+        <Navbar />
       </body>
     </html>
   );

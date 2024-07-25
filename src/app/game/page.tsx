@@ -11,14 +11,10 @@ const Game = dynamic(() => import("@/components/Game/game"), {
 
 const GamePage: NextPage = () => {
   const { user } = useUserStore();
-  // const addPoints = async (username: string) => {
-  //   const { data } = await axios.post("/api/points", { username });
-  //   return data;
-  // };
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div>{user!.username}</div>
+      <div>{user!.points}</div>
       <h1 className="text-4xl font-bold mb-8 text-center">
         Galactic Quest: Daily Challenge
       </h1>

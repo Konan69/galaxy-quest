@@ -11,6 +11,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useUserStore } from "@/components/Store/userStore";
 import { useAddPointsMutation } from "@/mutations/mutations";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 // Constants for game dimensions and element sizes
 const GAME_HEIGHT = 400;
@@ -295,6 +297,9 @@ const Game: React.FC = () => {
           <AlertDialogFooter>
             <AlertDialogAction onClick={startGame}>
               {gameOver ? "Play Again" : "Start Game"}
+            </AlertDialogAction>
+            <AlertDialogAction>
+              {<Link href="/landing">Exit</Link>}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
