@@ -9,6 +9,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { useUserStore } from "@/components/Store/userStore";
+import { useAddPointsMutation } from "@/mutations/mutations";
 
 // Constants for game dimensions and element sizes
 const GAME_HEIGHT = 400;
@@ -38,6 +40,8 @@ interface Position {
 }
 
 const Game: React.FC = () => {
+  const { user } = useUserStore();
+  const addPointsMutation = useAddPointsMutation();
   // State hooks for game objects and status
   const [obstacles, setObstacles] = useState<Obstacle[]>([]);
   const [projectiles, setProjectiles] = useState<Projectile[]>([]);
@@ -54,6 +58,12 @@ const Game: React.FC = () => {
   const gameAreaRef = useRef<HTMLDivElement>(null);
   const isDraggingRef = useRef(false);
   const lastPointerPositionRef = useRef<Position>({ x: 0, y: 0 });
+  const scoreRef = useRef(score); // Ref for score
+
+  // Update scoreRef whenever score changes
+  useEffect(() => {
+    scoreRef.current = score;
+  }, [score]);
 
   // Function to spawn a new obstacle at a random x position
   const spawnObstacle = useCallback(() => {
@@ -76,6 +86,31 @@ const Game: React.FC = () => {
     };
     setProjectiles((prev) => [...prev, newProjectile]);
   }, []);
+
+  // Function to start or restart the game
+  const startGame = () => {
+    setGameStarted(true);
+    setGameOver(false);
+    setScore(0);
+    setLives(3);
+    setObstacles([]);
+    setProjectiles([]);
+    shipPositionRef.current = {
+      x: GAME_WIDTH / 2 - SHIP_SIZE / 2,
+      y: GAME_HEIGHT - SHIP_SIZE,
+    };
+  };
+
+  const endGame = useCallback(() => {
+    setGameOver(true);
+    setGameStarted(false);
+    if (user && user.username) {
+      addPointsMutation.mutate({
+        username: user.username,
+        points: scoreRef.current,
+      });
+    }
+  }, [user, addPointsMutation]);
 
   // Function to update game state including movement and collision detection
   const updateGameState = useCallback(() => {
@@ -140,8 +175,7 @@ const Game: React.FC = () => {
     // Check if lives are depleted to end the game
     setLives((prev) => {
       if (prev <= 0) {
-        setGameOver(true);
-        setGameStarted(false);
+        endGame();
       }
       return prev;
     });
@@ -165,20 +199,6 @@ const Game: React.FC = () => {
       clearInterval(shootingLoop);
     };
   }, [gameStarted, gameOver, updateGameState, spawnObstacle, shoot]);
-
-  // Function to start or restart the game
-  const startGame = () => {
-    setGameStarted(true);
-    setGameOver(false);
-    setScore(0);
-    setLives(3);
-    setObstacles([]);
-    setProjectiles([]);
-    shipPositionRef.current = {
-      x: GAME_WIDTH / 2 - SHIP_SIZE / 2,
-      y: GAME_HEIGHT - SHIP_SIZE,
-    };
-  };
 
   // Handle pointer down event to start dragging the ship
   const handlePointerDown = useCallback((e: React.PointerEvent) => {
