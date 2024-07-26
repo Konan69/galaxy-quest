@@ -1,3 +1,4 @@
+//fix exit button
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Rocket } from "lucide-react";
 import {
@@ -298,9 +299,9 @@ const Game: React.FC = () => {
             <AlertDialogAction onClick={startGame}>
               {gameOver ? "Play Again" : "Start Game"}
             </AlertDialogAction>
-            <AlertDialogAction>
-              {<Link href="/landing">Exit</Link>}
-            </AlertDialogAction>
+            <Link href="/landing">
+              <AlertDialogAction>Exit</AlertDialogAction>
+            </Link>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

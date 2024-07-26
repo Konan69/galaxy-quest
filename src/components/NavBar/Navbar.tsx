@@ -16,18 +16,24 @@ export default function Navbar() {
           <p className="mt-1">Game</p>
         </div>
       </Link>
-      <div className="text-center text-[#85827d] w-1/5">
-        <Coins className="w-8 h-8 mx-auto" />
-        <p className="mt-1">Earn</p>
-      </div>
-      <div className="text-center text-[#85827d] w-1/5">
-        <Coins className="w-8 h-8 mx-auto" />
-        <p className="mt-1">Earn</p>
-      </div>
-      <div className="text-center text-[#85827d] w-1/5">
-        <Coins className="w-8 h-8 mx-auto" />
-        <p className="mt-1">Earn</p>
-      </div>
+      <Link href="/earn">
+        <div className="text-center text-[#85827d] w-1/5">
+          <Coins className="w-8 h-8 mx-auto" />
+          <p className="mt-1">Earn</p>
+        </div>
+      </Link>
+      <Link href="/earn">
+        <div className="text-center text-[#85827d] w-1/5">
+          <Coins className="w-8 h-8 mx-auto" />
+          <p className="mt-1">Shop</p>
+        </div>
+      </Link>
+      <Link href="/earn">
+        <div className="text-center text-[#85827d] w-1/5">
+          <Coins className="w-20 h-8 mx-auto" />
+          <p className="mt-1">Leaderboard</p>
+        </div>
+      </Link>
     </div>
   );
 }
