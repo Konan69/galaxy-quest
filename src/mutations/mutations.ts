@@ -11,7 +11,22 @@ const createUser = async (username: string) => {
   const { data } = await axios.post("/api/user", { username });
   return data;
 };
-
+const updateTask = async ({
+  taskId,
+  username,
+  points,
+}: {
+  taskId: string;
+  username: string;
+  points: number;
+}) => {
+  const { data } = await axios.post("/api/tasks", {
+    taskId,
+    username,
+    points,
+  });
+  return data;
+};
 export const useRegisterUserMutation = () => {
   const { user: storeUser, setUser } = useUserStore();
   const queryClient = useQueryClient();
@@ -34,6 +49,19 @@ export const useAddPointsMutation = () => {
 
   return useMutation({
     mutationFn: addPoints,
+    onSuccess: (data) => {
+      queryClient.setQueryData(["user", data.username], data);
+      setUser(data);
+    },
+  });
+};
+
+export const useUpdateTaskMutation = () => {
+  const { user: storeUser, setUser } = useUserStore();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: updateTask,
     onSuccess: (data) => {
       queryClient.setQueryData(["user", data.username], data);
       setUser(data);

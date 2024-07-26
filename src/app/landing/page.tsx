@@ -19,7 +19,7 @@ const fetchUser = async (username: string) => {
 
 function getUserRows(user: User): DisplayDataRow[] {
   return [
-    { title: "id", value: user.id.toString() },
+    // { title: "id", value: user.id.toString() },
     { title: "username", value: user.username },
     { title: "points", value: user.points },
     { title: "invited_by", value: user.invitedBy },
