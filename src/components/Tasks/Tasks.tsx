@@ -4,34 +4,44 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Dog, Send, Users, Bone } from "lucide-react";
 
 const tasks = [
-  { icon: Dog, text: "Early Reward", reward: "+50 Points", action: "Check" },
+  { icon: Dog, text: "Early Reward", reward: 50, action: "Claim" },
   {
     icon: Send,
     text: "Subscribe to Galaxy Quest channel",
-    reward: "+100 POINTS",
+    reward: +100,
     action: "Start",
   },
   {
     icon: Users,
     text: "Invite 5 friends to Galaxy Quest",
-    reward: "+20000 POINTS",
+    reward: 20000,
     action: "Check",
   },
   {
     icon: Bone,
     text: "Send 🦴 to Binance X.com",
-    reward: "+100 DOGS",
+    reward: 100,
     action: "Start",
   },
   {
     icon: Bone,
     text: "Send 🦴 to OKX X.com",
-    reward: "+100 DOGS",
+    reward: 100,
     action: "Start",
   },
 ];
 
-const TaskItem = ({ icon: Icon, text, reward, action }: any) => (
+const TaskItem = ({
+  icon: Icon,
+  text,
+  reward,
+  action,
+}: {
+  icon: any;
+  text: string;
+  reward: number;
+  action: string;
+}) => (
   <Card className="bg-gray-800 border-gray-700 mb-4">
     <CardContent className="p-4 flex items-center justify-between">
       <div className="flex items-center space-x-4">
@@ -40,7 +50,7 @@ const TaskItem = ({ icon: Icon, text, reward, action }: any) => (
         </div>
         <div>
           <p className="text-white font-semibold">{text}</p>
-          <p className="text-purple-500">{reward}</p>
+          <p className="text-purple-500">+{reward} Points</p>
         </div>
       </div>
       <Button
