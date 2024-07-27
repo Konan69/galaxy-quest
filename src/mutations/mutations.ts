@@ -66,5 +66,8 @@ export const useUpdateTaskMutation = () => {
       queryClient.setQueryData(["user", data.username], data);
       setUser(data);
     },
+    onError: (error) => {
+      console.error(error);
+    },
   });
 };

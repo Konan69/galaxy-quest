@@ -9,16 +9,25 @@ export async function POST(req: NextRequest) {
     points,
   }: { taskId: string; username: string; points: number } = body;
   try {
-    const updateTask = await prisma.user.update({
-      where: { username },
-      data: {
-        [taskId]: true,
-        points: {
-          increment: points,
+    const updateTask = await prisma.$transaction([
+      prisma.userTasks.update({
+        where: { username },
+        data: {
+          [taskId]: true,
         },
-      },
-    });
-    return NextResponse.json(updateTask);
+      }),
+      prisma.user.update({
+        where: { username },
+        data: {
+          points: {
+            increment: points,
+          },
+        },
+        include: { tasks: true },
+      }),
+    ]);
+
+    return NextResponse.json(updateTask[1]);
   } catch (error) {
     return NextResponse.json({ message: "Error updating task", error });
   }

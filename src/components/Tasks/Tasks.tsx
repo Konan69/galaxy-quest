@@ -71,6 +71,7 @@ const TaskItem = ({
 const TasksComponent = () => {
   const updateTask = useUpdateTaskMutation();
   const { user: storeUser, setUser } = useUserStore();
+  // add eerror handling in taks i.e prisma ieerorr in store when tasks fail
   const handleTaskAction = (task: any) => {
     if (task.id === "EarlyReward") {
       window.open(
