@@ -79,7 +79,7 @@ const TasksComponent = () => {
         "_blank",
       );
       updateTask.mutate({
-        taskId: "Error",
+        taskId: task.id,
         username: storeUser?.username!,
         points: task.reward,
       });
