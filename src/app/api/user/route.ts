@@ -50,7 +50,11 @@ export async function POST(req: NextRequest) {
       create: {
         username,
         invitedBy: invitedBy || undefined,
+        tasks: {
+          create: {}, // This will create a UserTasks record with default values
+        },
       },
+      include: { tasks: true },
     });
 
     // If there's an invitedBy, update the inviter's invites array

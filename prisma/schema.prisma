@@ -14,16 +14,14 @@ generator client {
 }
 
 model User {
-  id          String     @id @default(auto()) @map("_id") @db.ObjectId
-  username    String     @unique
-  points      Int        @default(0)
-  wallet      String?    @default("")
-  invitedBy   String?    @db.ObjectId
-  invites     String[]   @db.ObjectId
-  purchases   Purchase[]
-  EarlyReward Boolean    @default(false)
-  SubTgram    Boolean    @default(false)
-  Invite5     Boolean    @default(false)
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  username  String     @unique
+  points    Int        @default(0)
+  wallet    String?    @default("")
+  invitedBy String?    @db.ObjectId
+  invites   String[]   @db.ObjectId
+  purchases Purchase[]
+  tasks     UserTasks?
 }
 
 model Item {
@@ -41,4 +39,14 @@ model Purchase {
   Item   Item   @relation(fields: [itemId], references: [id])
 
   @@unique([userId, itemId])
+}
+
+model UserTasks {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  username    String  @unique
+  EarlyReward Boolean @default(false)
+  SubTgram    Boolean @default(false)
+  Invite5     Boolean @default(false)
+
+  user User @relation(fields: [username], references: [username])
 }

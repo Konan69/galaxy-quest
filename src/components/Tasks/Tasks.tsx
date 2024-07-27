@@ -27,18 +27,6 @@ const tasks = [
     reward: 20000,
     action: "Check",
   },
-  {
-    icon: Bone,
-    text: "Send 🦴 to Binance X.com",
-    reward: 100,
-    action: "Start",
-  },
-  {
-    icon: Bone,
-    text: "Send 🦴 to OKX X.com",
-    reward: 100,
-    action: "Start",
-  },
 ];
 
 const TaskItem = ({
