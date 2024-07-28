@@ -48,6 +48,9 @@ export const useGetUserQuery = () => {
       queryClient.setQueryData(["user", data.username], data);
       setUser(data);
     },
+    onError: (error) => {
+      setUser(null);
+    },
   });
 };
 
