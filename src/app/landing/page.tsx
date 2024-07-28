@@ -31,7 +31,7 @@ export default function LandingClient() {
     if (!storeUser && username) {
       createUserMutation.mutate({ username, inv_code } as any);
     }
-  }, [username]);
+  }, [username, storeUser]);
 
   const userRows = useMemo(() => {
     return storeUser ? getUserRows(storeUser) : undefined;
