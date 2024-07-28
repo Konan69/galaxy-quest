@@ -1,8 +1,10 @@
 import { useUserStore } from "@/components/Store/userStore";
+import { useToast } from "@/components/ui/use-toast";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import axios, { AxiosError } from "axios";
+
 interface AddPointsData {
   username: string;
   points: number;

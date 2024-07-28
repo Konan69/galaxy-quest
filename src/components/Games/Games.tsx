@@ -24,7 +24,7 @@ export const GameItems = ({ icon: Icon, text, action }: any) => {
             <Icon className="text-purple-500 w-6 h-6" />
           </div>
           <div>
-            <p className="text-white font-semibold">{text}</p>
+            <p className="text-white text-base font-semibold">{text}</p>
           </div>
         </div>
         <Button
@@ -39,7 +39,7 @@ export const GameItems = ({ icon: Icon, text, action }: any) => {
 };
 export const GamesComponent = () => {
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-8">
+    <div className="h-full overflow-y-auto bg-gray-900 text-white p-8">
       {/* <h1 className="text-2xl font-bold mb-6">Games</h1> */}
       <div>
         {Games.map((game, index) => (

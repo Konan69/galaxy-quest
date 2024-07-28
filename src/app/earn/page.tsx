@@ -7,19 +7,23 @@ import { GamesComponent } from "@/components/Games/Games";
 
 const EarnNav = ({ activeTab, setActiveTab }: any) => {
   return (
-    <div className="fixed top-20 left-1/2 transform -translate-x-1/2 w-[calc(100%-2rem)] max-w-xl bg-[#272a2f] flex justify-around items-center z-50 rounded-3xl text-xs">
+    <div
+      className="fixed py-1 top-20 left-1/2 transform -translate-x-1/2 w-[calc(65%-2rem)] flex justify-around items-center z-50 rounded-3xl text-xs backdrop-filter 
+                backdrop-blur-md 
+                bg-opacity-40 bg-gray-700 opacity-90"
+    >
       <button
         onClick={() => setActiveTab("game")}
-        className={`text-center w-1/5 ${activeTab === "game" ? "text-white" : "text-[#85827d]"}`}
+        className={`text-center w-1/4 ${activeTab === "game" ? "text-white" : "text-[#85827d]"}`}
       >
-        <Coins className="w-8 h-8 mx-auto" />
-        <p className="mt-1">Games</p>
+        <Coins className="w-6 h-6 mx-auto" />
+        <p className="mt-1">Arcade</p>
       </button>
       <button
         onClick={() => setActiveTab("tasks")}
-        className={`text-center w-1/5 ${activeTab === "tasks" ? "text-white" : "text-[#85827d]"}`}
+        className={`text-center w-1/4 ${activeTab === "tasks" ? "text-white" : "text-[#85827d]"}`}
       >
-        <Coins className="w-8 h-8 mx-auto" />
+        <Coins className="w-6 h-6 mx-auto" />
         <p className="mt-1">Tasks</p>
       </button>
     </div>
@@ -30,9 +34,9 @@ const EarnPage = () => {
   const [activeTab, setActiveTab] = useState("game");
 
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div className=" bg-gray-900">
       <EarnNav activeTab={activeTab} setActiveTab={setActiveTab} />
-      <div className="pt-32 px-4">
+      <div className="min-h-screen pt-32 px-4">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
