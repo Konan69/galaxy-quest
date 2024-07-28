@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
   try {
     const user = await prisma.user.findUnique({
       where: { username },
-      include: { purchases: true },
+      include: { tasks: true },
     });
 
     if (!user) {

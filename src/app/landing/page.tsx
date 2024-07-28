@@ -1,5 +1,8 @@
 "use client";
-import { useRegisterUserMutation } from "@/mutations/mutations";
+import {
+  useGetUserQuery,
+  useRegisterUserMutation,
+} from "@/mutations/mutations";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import {
@@ -26,10 +29,14 @@ export default function LandingClient() {
   const inv_code = initData?.startParam;
   const { user: storeUser, setUser } = useUserStore();
   const createUserMutation = useRegisterUserMutation();
+  const getUserMutation = useGetUserQuery();
 
   useEffect(() => {
     if (!storeUser && username) {
       createUserMutation.mutate({ username, inv_code } as any);
+    }
+    if (storeUser) {
+      getUserMutation.mutate({ username } as any);
     }
   }, [username, storeUser]);
 

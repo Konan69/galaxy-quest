@@ -17,6 +17,11 @@ const createUser = async ({
   return data;
 };
 
+const getUser = async ({ username }: { username: string }) => {
+  const { data } = await axios.get(`/api/user?username=${username}`);
+  return data;
+};
+
 // prettier-ignore
 const updateTask = async ({ taskId, username, points, }: { taskId: string; username: string; points: number;
 }) => { const { data } = await axios.post("/api/tasks", { taskId, username,  points,});
@@ -30,6 +35,18 @@ export const useRegisterUserMutation = () => {
     mutationFn: createUser,
     onSuccess: (data) => {
       queryClient.setQueryData(["user", data.username], data), setUser(data);
+    },
+  });
+};
+
+export const useGetUserQuery = () => {
+  const { user: storeUser, setUser } = useUserStore();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: getUser,
+    onSuccess: (data) => {
+      queryClient.setQueryData(["user", data.username], data);
+      setUser(data);
     },
   });
 };
