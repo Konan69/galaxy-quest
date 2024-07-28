@@ -17,13 +17,13 @@ function getUserRows(user: User): DisplayDataRow[] {
     { title: "username", value: user.username },
     { title: "points", value: user.points },
     { title: "invited_by", value: user.invitedBy },
-    // { title: "purchases", value: user.purchases },
   ];
 }
 
 export default function LandingClient() {
   const initData = useInitData();
   const username = initData?.user?.username;
+  const inv_code = initData?.startParam;
   const { user: storeUser, setUser } = useUserStore();
   const createUserMutation = useRegisterUserMutation();
 
@@ -42,6 +42,7 @@ export default function LandingClient() {
   return (
     <div className="overflow-y-auto">
       {storeUser && <DisplayData rows={getUserRows(storeUser)} />}
+      Invite code = {inv_code}
     </div>
   );
 }

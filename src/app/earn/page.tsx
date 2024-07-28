@@ -15,14 +15,15 @@ const EarnNav = memo(({ activeTab, setActiveTab }: any) => {
     >
       <button
         onClick={() => setActiveTab("game")}
-        className={`text-center w-1/4 ${activeTab === "game" ? "text-white" : "text-[#85827d]"}`}
+        className={`text-center w-1/2 ${activeTab === "game" ? "text-white bg-purple-500 rounded-l-3xl" : "text-[#85827d]"}`}
       >
         <Coins className="w-6 h-6 mx-auto" />
         <p className="mt-1">Arcade</p>
       </button>
+
       <button
         onClick={() => setActiveTab("tasks")}
-        className={`text-center w-1/4 ${activeTab === "tasks" ? "text-white" : "text-[#85827d]"}`}
+        className={`text-center w-1/2 ${activeTab === "tasks" ? "text-white bg-purple-500 rounded-r-3xl" : "text-[#85827d]"}`}
       >
         <Coins className="w-6 h-6 mx-auto" />
         <p className="mt-1">Tasks</p>
