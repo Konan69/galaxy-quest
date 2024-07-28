@@ -3,8 +3,6 @@ import {
   useGetUserQuery,
   useRegisterUserMutation,
 } from "@/mutations/mutations";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
 import {
   DisplayData,
   DisplayDataRow,
@@ -38,7 +36,7 @@ export default function LandingClient() {
     if (storeUser) {
       getUserMutation.mutate({ username } as any);
     }
-  }, [username, storeUser]);
+  }, [username]);
 
   const userRows = useMemo(() => {
     return storeUser ? getUserRows(storeUser) : undefined;
