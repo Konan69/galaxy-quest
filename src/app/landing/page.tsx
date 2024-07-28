@@ -29,7 +29,7 @@ export default function LandingClient() {
 
   useEffect(() => {
     if (!storeUser && username) {
-      createUserMutation.mutate(username);
+      createUserMutation.mutate({ username, inv_code } as any);
     }
   }, [username]);
 

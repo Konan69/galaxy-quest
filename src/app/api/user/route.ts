@@ -33,8 +33,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { username, invitedBy }: { username: string; invitedBy?: string } =
-    body;
+  const { username, inv_code }: { username: string; inv_code?: string } = body;
 
   if (!username) {
     return NextResponse.json(
@@ -49,7 +48,7 @@ export async function POST(req: NextRequest) {
       update: {},
       create: {
         username,
-        invitedBy: invitedBy || undefined,
+        invitedBy: inv_code || undefined,
         tasks: {
           create: {}, // This will create a UserTasks record with default values
         },
@@ -58,9 +57,9 @@ export async function POST(req: NextRequest) {
     });
 
     // If there's an invitedBy, update the inviter's invites array
-    if (invitedBy) {
+    if (inv_code) {
       await prisma.user.update({
-        where: { id: invitedBy },
+        where: { id: inv_code },
         data: { invites: { push: user.id } },
       });
     }

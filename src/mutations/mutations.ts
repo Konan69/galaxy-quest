@@ -10,18 +10,16 @@ interface AddPointsData {
   points: number;
 }
 
-// Function to create a new user
-const createUser = async (username: string) => {
-  const { data } = await axios.post("/api/user", { username });
+//prettier-ignore
+const createUser = async ({
+  username,inv_code}: { username: string;inv_code?: string}) => 
+  {const { data } = await axios.post("/api/user", { username, inv_code });
   return data;
 };
+
 // prettier-ignore
-const updateTask = async ({ 
-  taskId, username, points, }: { taskId: string; username: string; points: number;
-}) => {
-  const { data } = await axios.post("/api/tasks", {
-  taskId, username,  points,
-  });
+const updateTask = async ({ taskId, username, points, }: { taskId: string; username: string; points: number;
+}) => { const { data } = await axios.post("/api/tasks", { taskId, username,  points,});
   return data;
 };
 export const useRegisterUserMutation = () => {
