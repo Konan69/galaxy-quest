@@ -60,7 +60,10 @@ export async function POST(req: NextRequest) {
     if (inv_code) {
       await prisma.user.update({
         where: { id: inv_code },
-        data: { invites: { push: user.id } },
+        data: {
+          invites: { increment: 1 },
+          points: { increment: 1000 },
+        },
       });
     }
 

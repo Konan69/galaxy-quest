@@ -19,7 +19,7 @@ model User {
   points    Int        @default(0)
   wallet    String?    @default("")
   invitedBy String?    @db.ObjectId
-  invites   String[]   @db.ObjectId
+  invites   Int        @default(0)
   purchases Purchase[]
   tasks     UserTasks?
 }
