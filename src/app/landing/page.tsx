@@ -23,7 +23,10 @@ function getUserRows(user: User): DisplayDataRow[] {
 
 export default function LandingClient() {
   const initData = useInitData();
-  const username = initData?.user?.username; //gek[]
+  const username = useMemo(
+    () => initData?.user?.username,
+    [initData?.user?.username],
+  ); //gek[]
   const inv_code = initData?.startParam;
   const { user: storeUser, setUser } = useUserStore();
   const createUserMutation = useRegisterUserMutation();
