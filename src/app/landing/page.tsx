@@ -11,12 +11,6 @@ import { useMemo, useEffect } from "react";
 import { useUserStore } from "@/components/Store/userStore";
 import { User } from "@prisma/client";
 
-// Function to fetch user data from the API
-const fetchUser = async (username: string) => {
-  const { data } = await axios.get(`/api/user?username=${username}`);
-  return data;
-};
-
 function getUserRows(user: User): DisplayDataRow[] {
   return [
     // { title: "id", value: user.id.toString() },
@@ -45,5 +39,9 @@ export default function LandingClient() {
 
   if (!username) return <div>Please set username in telegram</div>;
   if (createUserMutation.isPending) return <div>Loading...</div>;
-  return <>{storeUser && <DisplayData rows={getUserRows(storeUser)} />}</>;
+  return (
+    <div className="overflow-y-auto">
+      {storeUser && <DisplayData rows={getUserRows(storeUser)} />}
+    </div>
+  );
 }

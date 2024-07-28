@@ -1,14 +1,15 @@
 "use client";
-import React, { useState } from "react";
+import React, { memo } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import TasksComponent from "@/components/Tasks/Tasks";
-import Coins from "@/components/Icons/Coins";
 import { GamesComponent } from "@/components/Games/Games";
+import Coins from "@/components/Icons/Coins";
 
-const EarnNav = ({ activeTab, setActiveTab }: any) => {
+const EarnNav = memo(({ activeTab, setActiveTab }: any) => {
   return (
     <div
-      className="fixed py-1 top-20 left-1/2 transform -translate-x-1/2 w-[calc(65%-2rem)] flex justify-around items-center z-50 rounded-3xl text-xs backdrop-filter 
+      className="fixed top-20  mx-auto w-48 flex justify-around items-center z-50 rounded-3xl text-xs backdrop-filter 
                 backdrop-blur-md 
                 bg-opacity-40 bg-gray-700 opacity-90"
     >
@@ -28,16 +29,21 @@ const EarnNav = ({ activeTab, setActiveTab }: any) => {
       </button>
     </div>
   );
-};
+});
+
+EarnNav.displayName = "EarnNav";
 
 const EarnPage = () => {
   const [activeTab, setActiveTab] = useState("game");
 
   return (
-    <div className=" bg-gray-900">
-      <EarnNav activeTab={activeTab} setActiveTab={setActiveTab} />
+    <div className="bg-gray-900">
+      <div className=" min-w-full px-28">
+        <EarnNav activeTab={activeTab} setActiveTab={setActiveTab} />
+      </div>
+
       <div className="min-h-screen pt-32 px-4">
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="popLayout">
           <motion.div
             key={activeTab}
             initial={{ x: 300, opacity: 0 }}

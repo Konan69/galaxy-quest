@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useUserStore } from "@/components/Store/userStore";
 import { useAddPointsMutation } from "@/mutations/mutations";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 // Constants for game dimensions and element sizes
@@ -295,13 +294,15 @@ const Game: React.FC = () => {
                 : "Ready to start your space adventure?"}
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogAction onClick={startGame}>
-              {gameOver ? "Play Again" : "Start Game"}
-            </AlertDialogAction>
-            <Link href="/landing">
-              <AlertDialogAction>Exit</AlertDialogAction>
-            </Link>
+          <AlertDialogFooter className="flex justify-center">
+            <div className="flex place-content-center">
+              <AlertDialogAction className="mr-2 w-22" onClick={startGame}>
+                {gameOver ? "Play Again" : "Start Game"}
+              </AlertDialogAction>
+              <Link href="/landing" className="w-20">
+                <AlertDialogAction>Exit</AlertDialogAction>
+              </Link>
+            </div>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
