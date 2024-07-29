@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -23,11 +23,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import {
-  TonConnectButton,
-  useTonWallet,
-  useTonConnectUI,
-} from "@tonconnect/ui-react";
+import { TonConnectButton, useTonWallet } from "@tonconnect/ui-react";
 
 const tasks = [
   {
@@ -130,6 +126,7 @@ const TasksComponent = () => {
     groupId: demoGroup,
   });
   const wallet = useTonWallet();
+  const walletUpdated = useRef(false);
 
   const taskUpdater = (task: any) => {
     updateTask.mutate(
@@ -185,25 +182,26 @@ const TasksComponent = () => {
     if (task.id === "SubTgram") {
       checkMember(task);
     }
-    // The ConnectWallet task is now handled in the useEffect hook
   };
 
   useEffect(() => {
-    if (wallet) {
+    if (wallet && !walletUpdated.current && !storeUser?.tasks?.ConnectWallet) {
+      walletUpdated.current = true;
       const connectWalletTask = tasks.find(
         (task) => task.id === "ConnectWallet",
       );
-      if (connectWalletTask && !storeUser?.tasks?.ConnectWallet) {
+      if (connectWalletTask) {
         updateWallet.mutate(
           {
             username: storeUser?.username!,
-            wallet: wallet.account.address,
+            wallet: wallet.account.publicKey?.toString()!,
           },
           {
             onSuccess: () => {
               taskUpdater(connectWalletTask);
             },
             onError: () => {
+              walletUpdated.current = false;
               toast({
                 variant: "destructive",
                 title: "Failed to update wallet",
