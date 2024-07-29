@@ -150,6 +150,7 @@ const TasksComponent = () => {
         title: "Failed to complete task",
         description: `${error.message}`,
       });
+      console.error(error);
     }
   };
 
