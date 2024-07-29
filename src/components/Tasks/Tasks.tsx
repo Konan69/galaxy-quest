@@ -178,15 +178,12 @@ const TasksComponent = () => {
     if (task.id === "SubTgram") {
       checkMember(task);
     }
-    // ConnectWallet task is now handled by TonConnectButton
-  };
-
-  // Effect to check if wallet is connected and update the task
-  React.useEffect(() => {
-    if (wallet) {
-      taskUpdater(tasks.find((task) => task.id === "ConnectWallet"));
+    if (task.id === "ConnectWallet") {
+      if (wallet) {
+        taskUpdater(task);
+      }
     }
-  }, [wallet]);
+  };
 
   const pendingTasks = tasks.filter(
     (task) => !storeUser?.tasks?.[task.id as keyof typeof storeUser.tasks],
