@@ -35,7 +35,7 @@ const tasks = [
     icon: Send,
     text: "Subscribe to Galaxy Quest channel",
     reward: 100,
-    action: "Start",
+    action: "Claim",
   },
   {
     id: "Invite5",
