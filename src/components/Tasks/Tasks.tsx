@@ -145,13 +145,6 @@ const TasksComponent = () => {
           description: "You have not joined the channel",
         });
 
-  if (membershipCheck.isLoading) {
-    toast({
-      variant: "default",
-      description: "Checking membership...",
-    });
-    return;
-  }
   if (membershipCheck.error) {
     toast({
       variant: "destructive",
