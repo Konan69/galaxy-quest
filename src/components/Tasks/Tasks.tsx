@@ -143,6 +143,14 @@ const TasksComponent = () => {
           variant: "default",
           description: "You have not joined the channel",
         });
+
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "Failed to complete task",
+        description: `${error.message}`,
+      });
+    }
   };
 
   const handleTaskAction = (task: any) => {
