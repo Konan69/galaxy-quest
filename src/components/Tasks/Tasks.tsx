@@ -135,7 +135,7 @@ const TasksComponent = () => {
   const checkMember = (task: any) => {
     const { data, error } = useMembershipCheck({
       userId: telegramId!,
-      groupId: task.reward,
+      groupId: -1002175023524,
     });
     data?.isMember
       ? taskUpdater(task)
