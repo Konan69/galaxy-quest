@@ -42,11 +42,12 @@ model Purchase {
 }
 
 model UserTasks {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
-  username    String  @unique
-  EarlyReward Boolean @default(false)
-  SubTgram    Boolean @default(false)
-  Invite5     Boolean @default(false)
+  id            String  @id @default(auto()) @map("_id") @db.ObjectId
+  username      String  @unique
+  EarlyReward   Boolean @default(false)
+  SubTgram      Boolean @default(false)
+  Invite5       Boolean @default(false)
+  ConnectWallet Boolean @default(false)
 
   user User @relation(fields: [username], references: [username])
 }
