@@ -13,6 +13,7 @@ import {
 import { useTelegramId, useUserStore } from "@/components/Store/userStore";
 import {
   useMembershipCheck,
+  useSetWalletMutation,
   useUpdateTaskMutation,
 } from "@/mutations/mutations";
 import { Toaster } from "@/components/ui/toaster";
@@ -22,7 +23,11 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { TonConnectButton, useTonWallet } from "@tonconnect/ui-react";
+import {
+  TonConnectButton,
+  useTonWallet,
+  WalletAlreadyConnectedError,
+} from "@tonconnect/ui-react";
 
 const tasks = [
   {
@@ -115,6 +120,7 @@ const TaskItem = ({
 const TasksComponent = () => {
   const { toast } = useToast();
   const updateTask = useUpdateTaskMutation();
+  const updateWallet = useSetWalletMutation();
   const demoGroup = -1002175023524;
   const { user: storeUser, setUser } = useUserStore();
   const { telegramId } = useTelegramId();
@@ -180,6 +186,10 @@ const TasksComponent = () => {
     }
     if (task.id === "ConnectWallet") {
       if (wallet) {
+        updateWallet.mutate({
+          username: storeUser?.username!,
+          wallet: wallet.account.publicKey?.toString()!,
+        });
         taskUpdater(task);
       }
     }

@@ -21,6 +21,11 @@ const createUser = async ({
 };
 
 //prettier-ignore
+const updateWallet = async({username, wallet} : { username: string; wallet: string}) => {
+  const { data } = await axios.post("/api/wallet", { username, wallet });
+  return data
+}
+//prettier-ignore
 const isMemeber = async ({ userId, groupId }: { userId: number; groupId: string | number }) => {
   const { data } = await axios.get<MembershipCheckResponse>(
     `/api/check-member?userId=${userId}&groupId=${groupId}`,
@@ -145,6 +150,23 @@ export const useUpdateTaskMutation = () => {
       } else {
         setError(new Error(`Unknown error: ${String(error)}`));
       }
+    },
+  });
+};
+
+export const useSetWalletMutation = () => {
+  const { user: storeUser, setUser, setError } = useUserStore();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: updateWallet,
+    onSuccess: (data) => {
+      queryClient.setQueryData(["user", data.username], data);
+      setUser(data);
+    },
+    onError: (error) => {
+      setError(new Error(`Unknown error: ${String(error)}`));
+      console.error(error);
     },
   });
 };
