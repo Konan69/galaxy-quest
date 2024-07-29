@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -26,7 +26,7 @@ import {
 import {
   TonConnectButton,
   useTonWallet,
-  WalletAlreadyConnectedError,
+  useTonConnectUI,
 } from "@tonconnect/ui-react";
 
 const tasks = [
@@ -130,6 +130,7 @@ const TasksComponent = () => {
     groupId: demoGroup,
   });
   const wallet = useTonWallet();
+
   const taskUpdater = (task: any) => {
     updateTask.mutate(
       {
@@ -184,16 +185,37 @@ const TasksComponent = () => {
     if (task.id === "SubTgram") {
       checkMember(task);
     }
-    if (task.id === "ConnectWallet") {
-      if (wallet) {
-        updateWallet.mutate({
-          username: storeUser?.username!,
-          wallet: wallet.account.publicKey?.toString()!,
-        });
-        taskUpdater(task);
+    // The ConnectWallet task is now handled in the useEffect hook
+  };
+
+  useEffect(() => {
+    if (wallet) {
+      const connectWalletTask = tasks.find(
+        (task) => task.id === "ConnectWallet",
+      );
+      if (connectWalletTask && !storeUser?.tasks?.ConnectWallet) {
+        updateWallet.mutate(
+          {
+            username: storeUser?.username!,
+            wallet: wallet.account.address,
+          },
+          {
+            onSuccess: () => {
+              taskUpdater(connectWalletTask);
+            },
+            onError: () => {
+              toast({
+                variant: "destructive",
+                title: "Failed to update wallet",
+                description:
+                  "There was an error updating your wallet. Please try again.",
+              });
+            },
+          },
+        );
       }
     }
-  };
+  }, [wallet, storeUser]);
 
   const pendingTasks = tasks.filter(
     (task) => !storeUser?.tasks?.[task.id as keyof typeof storeUser.tasks],
