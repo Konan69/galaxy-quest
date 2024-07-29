@@ -2,7 +2,7 @@
 
 import TelegramBot from "node-telegram-bot-api";
 import { NextRequest, NextResponse } from "next/server";
-const token = process.env.TELEGRAM_BOT_TOKEN!;
+const token = process.env.TG_TOKEN!;
 
 // Replace 'YOUR_BOT_TOKEN' with your actual Telegram Bot Token
 const bot = new TelegramBot(token, { polling: false });

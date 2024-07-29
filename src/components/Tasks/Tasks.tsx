@@ -101,9 +101,14 @@ const TaskItem = ({
 const TasksComponent = () => {
   const { toast } = useToast();
   const updateTask = useUpdateTaskMutation();
+  const demoGroup = -1002175023524;
   const { user: storeUser, setUser } = useUserStore();
   const { telegramId } = useTelegramId();
   const [isOpen, setIsOpen] = React.useState(false);
+  const membershipCheck = useMembershipCheck({
+    userId: telegramId!,
+    groupId: demoGroup,
+  });
 
   const taskUpdater = (task: any) => {
     updateTask.mutate(
@@ -132,27 +137,30 @@ const TasksComponent = () => {
     );
   };
 
-  const checkMember = (task: any) => {
-    const { data, error } = useMembershipCheck({
-      userId: telegramId!,
-      groupId: -1002175023524,
-    });
-    data?.isMember
+  const checkMember = (task: any) =>
+    membershipCheck.data?.isMember
       ? taskUpdater(task)
       : toast({
           variant: "default",
           description: "You have not joined the channel",
         });
 
-    if (error) {
-      toast({
-        variant: "destructive",
-        title: "Failed to complete task",
-        description: `${error.message}`,
-      });
-      console.error(error);
-    }
-  };
+  if (membershipCheck.isLoading) {
+    toast({
+      variant: "default",
+      description: "Checking membership...",
+    });
+    return;
+  }
+  if (membershipCheck.error) {
+    toast({
+      variant: "destructive",
+      title: "Failed to check membership",
+      description: `${membershipCheck.error.message}`,
+    });
+    console.error(membershipCheck.error);
+    return;
+  }
 
   const handleTaskAction = (task: any) => {
     if (task.id === "EarlyReward") {
