@@ -58,13 +58,17 @@ export async function POST(req: NextRequest) {
 
     // If there's an invitedBy, update the inviter's invites array
     if (inv_code) {
-      await prisma.user.update({
-        where: { id: inv_code },
-        data: {
-          invites: { increment: 1 },
-          points: { increment: 1000 },
-        },
-      });
+      try {
+        await prisma.user.update({
+          where: { id: inv_code },
+          data: {
+            invites: { increment: 1 },
+            points: { increment: 1000 },
+          },
+        });
+      } catch (error) {
+        console.error("Invalid inv_code or user not found");
+      }
     }
 
     return NextResponse.json(user, { status: 201 });

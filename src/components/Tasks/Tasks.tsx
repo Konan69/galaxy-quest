@@ -8,6 +8,7 @@ import {
   CheckCircle,
   ChevronUp,
   ChevronDown,
+  Wallet,
 } from "lucide-react";
 import { useTelegramId, useUserStore } from "@/components/Store/userStore";
 import {
@@ -21,6 +22,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { TonConnectButton, useTonWallet } from "@tonconnect/ui-react";
 
 const tasks = [
   {
@@ -44,6 +46,13 @@ const tasks = [
     reward: 20000,
     action: "Check",
   },
+  {
+    id: "ConnectWallet",
+    icon: Wallet,
+    text: "Connect wallet",
+    reward: 2000,
+    action: "Connect",
+  },
 ];
 
 const TaskItem = ({
@@ -53,6 +62,7 @@ const TaskItem = ({
   action,
   onAction,
   completed = false,
+  isWalletTask = false,
 }: {
   icon: any;
   text: string;
@@ -60,6 +70,7 @@ const TaskItem = ({
   action: string;
   onAction: () => void;
   completed?: boolean;
+  isWalletTask?: boolean;
 }) => (
   <Card
     className={`mb-4 ${completed ? "bg-gray-700" : "bg-gray-800"} border-gray-700`}
@@ -80,19 +91,22 @@ const TaskItem = ({
           </p>
         </div>
       </div>
-      {!completed && (
-        <Button
-          variant={action === "Check" ? "outline" : "default"}
-          className={
-            action === "Check"
-              ? "bg-transparent text-white border-purple-500 hover:bg-purple-500 hover:text-white"
-              : "bg-purple-500 text-white hover:bg-purple-600"
-          }
-          onClick={onAction}
-        >
-          {action}
-        </Button>
-      )}
+      {!completed &&
+        (isWalletTask ? (
+          <TonConnectButton />
+        ) : (
+          <Button
+            variant={action === "Check" ? "outline" : "default"}
+            className={
+              action === "Check"
+                ? "bg-transparent text-white border-purple-500 hover:bg-purple-500 hover:text-white"
+                : "bg-purple-500 text-white hover:bg-purple-600"
+            }
+            onClick={onAction}
+          >
+            {action}
+          </Button>
+        ))}
       {completed && <CheckCircle className="text-green-500 w-6 h-6" />}
     </CardContent>
   </Card>
@@ -109,7 +123,7 @@ const TasksComponent = () => {
     userId: telegramId!,
     groupId: demoGroup,
   });
-
+  const wallet = useTonWallet();
   const taskUpdater = (task: any) => {
     updateTask.mutate(
       {
@@ -145,16 +159,6 @@ const TasksComponent = () => {
           description: "You have not joined the channel",
         });
 
-  if (membershipCheck.error) {
-    toast({
-      variant: "destructive",
-      title: "Failed to check membership",
-      description: `${membershipCheck.error.message}`,
-    });
-    console.error(membershipCheck.error);
-    return;
-  }
-
   const handleTaskAction = (task: any) => {
     if (task.id === "EarlyReward") {
       window.open(
@@ -172,11 +176,18 @@ const TasksComponent = () => {
           });
     }
     if (task.id === "SubTgram") {
-      // -1002175023524;
       checkMember(task);
     }
+    // ConnectWallet task is now handled by TonConnectButton
   };
-  // Handle other tasks here
+
+  // Effect to check if wallet is connected and update the task
+  React.useEffect(() => {
+    if (wallet) {
+      taskUpdater(tasks.find((task) => task.id === "ConnectWallet"));
+    }
+  }, [wallet]);
+
   const pendingTasks = tasks.filter(
     (task) => !storeUser?.tasks?.[task.id as keyof typeof storeUser.tasks],
   );
@@ -194,6 +205,7 @@ const TasksComponent = () => {
             {...task}
             onAction={() => handleTaskAction(task)}
             completed={false}
+            isWalletTask={task.id === "ConnectWallet"}
           />
         ))}
       </div>

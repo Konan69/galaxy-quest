@@ -71,3 +71,17 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  button[data-tc-connect-button="true"] {
+    @apply bg-purple-500 hover:bg-purple-600 rounded-lg px-4 py-2 text-white font-bold border-none cursor-pointer;
+  }
+
+  button[data-tc-connect-button="true"] .go1487791704 {
+    visibility: hidden; /* Hide the original text */
+  }
+
+  button[data-tc-connect-button="true"] svg {
+    display: none; /* Hide the SVG element */
+  }
+}
