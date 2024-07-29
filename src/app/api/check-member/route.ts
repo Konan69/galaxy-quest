@@ -2,6 +2,7 @@
 
 import TelegramBot from "node-telegram-bot-api";
 import { NextRequest, NextResponse } from "next/server";
+
 const token = process.env.TG_TOKEN!;
 
 // Replace 'YOUR_BOT_TOKEN' with your actual Telegram Bot Token
@@ -10,6 +11,7 @@ const bot = new TelegramBot(token, { polling: false });
 async function checkUserInGroup(userId: number, groupId: TelegramBot.ChatId) {
   try {
     const chatMember = await bot.getChatMember(groupId, userId);
+    console.log(userId);
 
     // Check if the user is a member, admin, or creator of the group/channel
     const validStatuses = ["member", "administrator", "creator"];

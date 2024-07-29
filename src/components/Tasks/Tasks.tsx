@@ -101,7 +101,7 @@ const TaskItem = ({
 const TasksComponent = () => {
   const { toast } = useToast();
   const updateTask = useUpdateTaskMutation();
-  const demoGroup = 1002175023524;
+  const demoGroup = -1002175023524;
   const { user: storeUser, setUser } = useUserStore();
   const { telegramId } = useTelegramId();
   const [isOpen, setIsOpen] = React.useState(false);
