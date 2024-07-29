@@ -34,3 +34,19 @@ export const useUserStore = create<UserStore>()(
     },
   ),
 );
+
+interface InitData {
+  telegramId: number | null;
+  error: Error | null;
+  setTelegramId: (user: any) => void;
+  setError: (error: any) => void;
+  clearError: () => void;
+}
+
+export const useTelegramId = create<InitData>((set) => ({
+  telegramId: null,
+  error: null,
+  setTelegramId: (id: any) => set({ telegramId: id }),
+  setError: (error: any) => set({ error }),
+  clearError: () => set({ error: null }),
+}));

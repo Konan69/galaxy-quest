@@ -9,8 +9,11 @@ import {
   ChevronUp,
   ChevronDown,
 } from "lucide-react";
-import { useUserStore } from "@/components/Store/userStore";
-import { useUpdateTaskMutation } from "@/mutations/mutations";
+import { useTelegramId, useUserStore } from "@/components/Store/userStore";
+import {
+  useMembershipCheck,
+  useUpdateTaskMutation,
+} from "@/mutations/mutations";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "../ui/use-toast";
 import {
@@ -99,7 +102,48 @@ const TasksComponent = () => {
   const { toast } = useToast();
   const updateTask = useUpdateTaskMutation();
   const { user: storeUser, setUser } = useUserStore();
+  const { telegramId } = useTelegramId();
   const [isOpen, setIsOpen] = React.useState(false);
+
+  const taskUpdater = (task: any) => {
+    updateTask.mutate(
+      {
+        taskId: task.id,
+        username: storeUser?.username!,
+        points: task.reward,
+      },
+      {
+        onSuccess: () => {
+          toast({
+            variant: "default",
+            title: "Task completed",
+            description: `+${task.reward} points`,
+          });
+        },
+        onError: () => {
+          toast({
+            variant: "destructive",
+            title: "Failed to complete task",
+            description:
+              "There was an error completing the task. Please try again.",
+          });
+        },
+      },
+    );
+  };
+
+  const checkMember = (task: any) => {
+    const { data, error } = useMembershipCheck({
+      userId: telegramId!,
+      groupId: task.reward,
+    });
+    data?.isMember
+      ? taskUpdater(task)
+      : toast({
+          variant: "default",
+          description: "You have not joined the channel",
+        });
+  };
 
   const handleTaskAction = (task: any) => {
     if (task.id === "EarlyReward") {
@@ -107,27 +151,22 @@ const TasksComponent = () => {
         "https://twitter.com/intent/follow?screen_name=GalaxyQuestNFT",
         "_blank",
       );
-      updateTask.mutate(
-        {
-          taskId: task.id,
-          username: storeUser?.username!,
-          points: task.reward,
-        },
-        {
-          onError: () => {
-            toast({
-              variant: "destructive",
-              title: "Failed to complete task",
-              description:
-                "There was an error completing the task. Please try again.",
-            });
-          },
-        },
-      );
+      setTimeout(() => taskUpdater(task), 5000);
     }
-    // Handle other tasks here
+    if (task.id === "Invite5") {
+      storeUser?.invites! >= 5
+        ? taskUpdater(task)
+        : toast({
+            variant: "default",
+            description: "invite at least 5 people to complete the task.",
+          });
+    }
+    if (task.id === "SubTgram") {
+      // -1002175023524;
+      checkMember(task);
+    }
   };
-
+  // Handle other tasks here
   const pendingTasks = tasks.filter(
     (task) => !storeUser?.tasks?.[task.id as keyof typeof storeUser.tasks],
   );

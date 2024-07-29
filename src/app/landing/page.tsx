@@ -9,7 +9,8 @@ import {
 } from "@/components/DisplayData/DisplayData";
 import { useInitData } from "@telegram-apps/sdk-react";
 import { useMemo, useEffect } from "react";
-import { useUserStore } from "@/components/Store/userStore";
+import { useUserStore, useTelegramId } from "@/components/Store/userStore";
+
 import { User } from "@prisma/client";
 
 function getUserRows(user: User): DisplayDataRow[] {
@@ -28,22 +29,21 @@ export default function LandingClient() {
     [initData?.user?.username],
   ); //gek[]
   const inv_code = initData?.startParam;
-  const { user: storeUser, setUser } = useUserStore();
+  const { user: storeUser } = useUserStore();
+  const { telegramId, setTelegramId } = useTelegramId();
   const createUserMutation = useRegisterUserMutation();
   const getUserMutation = useGetUserQuery();
 
   useEffect(() => {
     if (!storeUser && username) {
       createUserMutation.mutate({ username, inv_code } as any);
+      setTelegramId(initData?.user?.id);
     }
     if (storeUser) {
       getUserMutation.mutate({ username } as any);
+      setTelegramId(initData?.user?.id);
     }
   }, [username]);
-
-  const userRows = useMemo(() => {
-    return storeUser ? getUserRows(storeUser) : undefined;
-  }, [storeUser]);
 
   if (!username) return <div>Please set username in telegram</div>;
   if (createUserMutation.isPending) return <div>Loading...</div>;
