@@ -39,7 +39,7 @@ const EarnPage = () => {
 
   return (
     <div className="bg-gray-900">
-      <div className="min-w-full px-24 pt-16">
+      <div className="min-w-full mx-auto pt-16">
         <EarnNav activeTab={activeTab} setActiveTab={setActiveTab} />
       </div>
 
