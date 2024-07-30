@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  background: var(--tg-theme-secondary-bg-color, white);
+  background: #111827;
 }
 
 @layer base {
@@ -74,7 +74,7 @@ body {
 
 @layer components {
   button[data-tc-connect-button="true"] {
-    @apply bg-purple-500 hover:bg-purple-600 rounded-lg px-4 py-2 text-white font-bold border-none cursor-pointer;
+    @apply bg-purple-500 hover:bg-purple-600 w-24 rounded-lg px-4 py-2 text-white font-bold border-none cursor-pointer;
   }
 
   button[data-tc-connect-button="true"] .go1487791704 {

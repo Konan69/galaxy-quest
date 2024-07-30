@@ -21,6 +21,12 @@ const SHIP_SIZE = 40;
 const OBSTACLE_SIZE = 30;
 const PROJECTILE_SIZE = 5;
 
+// New constants for difficulty scaling
+const INITIAL_OBSTACLE_SPEED = 2;
+const INITIAL_SPAWN_INTERVAL = 2000;
+const MAX_DIFFICULTY_FACTOR = 5;
+const DIFFICULTY_INCREASE_INTERVAL = 5000; // 5 seconds
+
 // Interfaces for obstacle and projectile states
 interface Obstacle {
   x: number;
@@ -51,6 +57,8 @@ const Game: React.FC = () => {
   const [score, setScore] = useState(0);
   const [gameStarted, setGameStarted] = useState(false);
   const [gameOver, setGameOver] = useState(false);
+  // New constants for difficulty scaling
+  const [difficultyFactor, setDifficultyFactor] = useState(1);
 
   // Refs for ship position and other states
   const shipPositionRef = useRef<Position>({
@@ -61,6 +69,7 @@ const Game: React.FC = () => {
   const isDraggingRef = useRef(false);
   const lastPointerPositionRef = useRef<Position>({ x: 0, y: 0 });
   const scoreRef = useRef(score); // Ref for score
+  const gameTimeRef = useRef(0);
 
   // Update scoreRef whenever score changes
   useEffect(() => {
@@ -97,6 +106,8 @@ const Game: React.FC = () => {
     setLives(3);
     setObstacles([]);
     setProjectiles([]);
+    setDifficultyFactor(1);
+    gameTimeRef.current = 0;
     shipPositionRef.current = {
       x: GAME_WIDTH / 2 - SHIP_SIZE / 2,
       y: GAME_HEIGHT - SHIP_SIZE,
@@ -116,10 +127,20 @@ const Game: React.FC = () => {
 
   // Function to update game state including movement and collision detection
   const updateGameState = useCallback(() => {
+    // Increase difficulty over time
+    gameTimeRef.current += 50; // 50ms per frame
+    if (gameTimeRef.current % DIFFICULTY_INCREASE_INTERVAL === 0) {
+      setDifficultyFactor((prev) =>
+        Math.min(prev + 0.1, MAX_DIFFICULTY_FACTOR),
+      );
+    }
     // Move obstacles down and check for collisions with the ship or bottom of the screen
     setObstacles((prev) =>
       prev
-        .map((obs) => ({ ...obs, y: obs.y + 2 }))
+        .map((obs) => ({
+          ...obs,
+          y: obs.y + INITIAL_OBSTACLE_SPEED * difficultyFactor,
+        }))
         .filter((obs) => {
           if (obs.y + OBSTACLE_SIZE >= GAME_HEIGHT) {
             setLives((l) => l - 1);
@@ -181,7 +202,7 @@ const Game: React.FC = () => {
       }
       return prev;
     });
-  }, []);
+  }, [difficultyFactor]);
 
   // Effect to start and manage game loops
   useEffect(() => {
@@ -191,7 +212,10 @@ const Game: React.FC = () => {
 
     if (gameStarted && !gameOver) {
       gameLoop = setInterval(updateGameState, 50);
-      obstacleSpawnLoop = setInterval(spawnObstacle, 2000);
+      obstacleSpawnLoop = setInterval(
+        spawnObstacle,
+        INITIAL_SPAWN_INTERVAL / difficultyFactor,
+      );
       shootingLoop = setInterval(shoot, 1000);
     }
 
@@ -280,7 +304,8 @@ const Game: React.FC = () => {
         ))}
       </div>
       <div className="mt-4">
-        Score: {score} | Lives: {lives}
+        Score: {score} | Lives: {lives} | Difficulty:{" "}
+        {difficultyFactor.toFixed(1)}x
       </div>
       <AlertDialog open={!gameStarted || gameOver}>
         <AlertDialogContent>

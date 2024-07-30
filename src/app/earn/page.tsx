@@ -54,17 +54,8 @@ const tabVariants = {
   }),
 };
 
-const swipeConfidenceThreshold = 10000;
-const swipePower = (offset: number, velocity: number) => {
-  return Math.abs(offset) * velocity;
-};
-
 const EarnPage = () => {
   const [[activeTab, direction], setActiveTab] = useState(["game", 0]);
-
-  const paginate = (newDirection: number) => {
-    setActiveTab([newDirection === 1 ? "tasks" : "game", newDirection]);
-  };
 
   return (
     <div className="bg-gray-900">
@@ -86,18 +77,6 @@ const EarnPage = () => {
             transition={{
               x: { type: "spring", stiffness: 300, damping: 30 },
               opacity: { duration: 0.2 },
-            }}
-            drag="x"
-            dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={1}
-            onDragEnd={(e, { offset, velocity }) => {
-              const swipe = swipePower(offset.x, velocity.x);
-
-              if (swipe < -swipeConfidenceThreshold) {
-                paginate(1);
-              } else if (swipe > swipeConfidenceThreshold) {
-                paginate(-1);
-              }
             }}
             className="absolute w-full"
           >
