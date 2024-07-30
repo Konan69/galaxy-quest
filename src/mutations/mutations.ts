@@ -89,13 +89,16 @@ export const useGetUserQuery = () => {
 export const useMembershipCheck = ({
   userId,
   groupId,
+  enabled = false,
 }: {
   userId: number;
   groupId: string | number;
+  enabled: boolean;
 }) => {
   return useQuery({
     queryKey: ["membershipCheck", userId, groupId],
     queryFn: () => isMemeber({ userId, groupId }),
+    enabled,
     select: (data) => ({
       isMember: data.isUserInGroup,
       runFunction: (callback: (isMember: boolean) => void) => {

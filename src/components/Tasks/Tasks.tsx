@@ -1,15 +1,16 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
-  Dog,
   Send,
   Users,
   CheckCircle,
   ChevronUp,
   ChevronDown,
   Wallet,
+  SparklesIcon,
 } from "lucide-react";
+
 import { useTelegramId, useUserStore } from "@/components/Store/userStore";
 import {
   useMembershipCheck,
@@ -28,34 +29,41 @@ import {
   useTonAddress,
   useTonWallet,
 } from "@tonconnect/ui-react";
-
+import X from "../Icons/X";
 const tasks = [
   {
     id: "EarlyReward",
-    icon: Dog,
+    icon: SparklesIcon,
     text: "Early Reward",
-    reward: 50,
-    action: "Claim",
+    reward: 2000,
+    action: "Start",
+  },
+  {
+    id: "FollowX",
+    icon: X,
+    text: "Follow Galaxy Quest on Twitter",
+    reward: 3000,
+    action: "Start",
   },
   {
     id: "SubTgram",
     icon: Send,
     text: "Subscribe to Galaxy Quest channel",
-    reward: 100,
-    action: "Claim",
+    reward: 2000,
+    action: "Start",
   },
   {
     id: "Invite5",
     icon: Users,
     text: "Invite 5 friends to Galaxy Quest",
-    reward: 20000,
-    action: "Check",
+    reward: 10000,
+    action: "Start",
   },
   {
     id: "ConnectWallet",
     icon: Wallet,
     text: "Connect wallet",
-    reward: 2000,
+    reward: 1000,
     action: "Connect",
   },
 ];
@@ -125,9 +133,11 @@ const TasksComponent = () => {
   const { user: storeUser, setUser } = useUserStore();
   const { telegramId } = useTelegramId();
   const [isOpen, setIsOpen] = React.useState(false);
+  const [checkMembership, setCheckMembership] = useState(false);
   const membershipCheck = useMembershipCheck({
     userId: telegramId!,
     groupId: demoGroup,
+    enabled: false,
   });
   const wallet = useTonWallet();
   const address = useTonAddress();
@@ -159,22 +169,37 @@ const TasksComponent = () => {
       },
     );
   };
-
-  const checkMember = (task: any) =>
-    membershipCheck.data?.isMember
-      ? taskUpdater(task)
-      : toast({
+  const checkMember = async (task: any) => {
+    try {
+      const result = await membershipCheck.refetch();
+      if (result.data?.isMember) {
+        taskUpdater(task);
+      } else {
+        toast({
           variant: "default",
           description: "You have not joined the channel",
         });
+      }
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error checking membership",
+        description:
+          "There was an error checking your membership. Please try again.",
+      });
+    }
+  };
 
   const handleTaskAction = (task: any) => {
-    if (task.id === "EarlyReward") {
+    if (task.id === "FollowX") {
       window.open(
         "https://twitter.com/intent/follow?screen_name=GalaxyQuestNFT",
         "_blank",
       );
-      setTimeout(() => taskUpdater(task), 5000);
+      taskUpdater(task);
+    }
+    if (task.id === "EarlyReward") {
+      setTimeout(() => taskUpdater(task), 3000);
     }
     if (task.id === "Invite5") {
       storeUser?.invites! >= 5
