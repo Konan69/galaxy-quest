@@ -9,7 +9,7 @@ import Coins from "@/components/Icons/Coins";
 const EarnNav = memo(({ activeTab, setActiveTab }: any) => {
   return (
     <div
-      className="mx-auto w-48 flex justify-around items-center z-50 rounded-3xl text-xs backdrop-filter 
+      className="mx-auto  w-48 flex justify-around items-center rounded-3xl text-xs backdrop-filter 
                 backdrop-blur-md 
                 bg-opacity-40 bg-gray-700 opacity-90"
     >
@@ -39,11 +39,11 @@ const EarnPage = () => {
 
   return (
     <div className="bg-gray-900">
-      <div className="sticky top-24 min-w-full px-24 ">
+      <div className="min-w-full px-24 pt-16">
         <EarnNav activeTab={activeTab} setActiveTab={setActiveTab} />
       </div>
 
-      <div className="min-h-screen pt-28 px-4">
+      <div className="min-h-screen pt-26">
         <AnimatePresence mode="popLayout">
           <motion.div
             key={activeTab}

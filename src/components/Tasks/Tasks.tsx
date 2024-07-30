@@ -199,7 +199,7 @@ const TasksComponent = () => {
         updateWallet.mutate(
           {
             username: storeUser?.username!,
-            wallet: wallet.account.publicKey?.toString()!,
+            wallet: address,
           },
           {
             onSuccess: () => {
@@ -274,7 +274,6 @@ const TasksComponent = () => {
           ))}
         </CollapsibleContent>
       </Collapsible>
-      <div>Address is {address}</div>
 
       <Toaster />
     </div>
