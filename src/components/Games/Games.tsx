@@ -39,7 +39,7 @@ export const GameItems = ({ icon: Icon, text, action }: any) => {
 };
 export const GamesComponent = () => {
   return (
-    <div className="h-full overflow-y-auto bg-gray-900 text-white p-8">
+    <div className="h-full overflow-y-hidden bg-gray-900 text-white p-8">
       {/* <h1 className="text-2xl font-bold mb-6">Games</h1> */}
       <div>
         {Games.map((game, index) => (
