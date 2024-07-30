@@ -23,7 +23,11 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { TonConnectButton, useTonWallet } from "@tonconnect/ui-react";
+import {
+  TonConnectButton,
+  useTonAddress,
+  useTonWallet,
+} from "@tonconnect/ui-react";
 
 const tasks = [
   {
@@ -126,6 +130,7 @@ const TasksComponent = () => {
     groupId: demoGroup,
   });
   const wallet = useTonWallet();
+  const address = useTonAddress();
   const walletUpdated = useRef(false);
 
   const taskUpdater = (task: any) => {
@@ -269,6 +274,8 @@ const TasksComponent = () => {
           ))}
         </CollapsibleContent>
       </Collapsible>
+      <div>Address is {address}</div>
+
       <Toaster />
     </div>
   );
