@@ -1,6 +1,10 @@
-//fix exit button
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { Rocket } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+
+import asteroid from "../../app/_assets/Sprites/asteroid.png";
+import ship from "../../app/_assets/Sprites/ship.png";
+import lazer from "../../app/_assets/Sprites/lazer.png";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,18 +16,17 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useUserStore } from "@/components/Store/userStore";
 import { useAddPointsMutation } from "@/mutations/mutations";
-import Link from "next/link";
 
 // Constants for game dimensions and element sizes
-const GAME_HEIGHT = 400;
+const GAME_HEIGHT = 500;
 const GAME_WIDTH = 300;
 const SHIP_SIZE = 40;
-const OBSTACLE_SIZE = 30;
+const OBSTACLE_SIZE = 60;
 const PROJECTILE_SIZE = 5;
 
-// New constants for difficulty scaling
-const INITIAL_OBSTACLE_SPEED = 2;
-const INITIAL_SPAWN_INTERVAL = 2000;
+// Constants for difficulty scaling
+const INITIAL_OBSTACLE_SPEED = 2.75;
+const INITIAL_SPAWN_INTERVAL = 2500;
 const MAX_DIFFICULTY_FACTOR = 5;
 const DIFFICULTY_INCREASE_INTERVAL = 5000; // 5 seconds
 
@@ -33,6 +36,7 @@ interface Obstacle {
   y: number;
   id: number;
   health: number;
+  rotationSpeed: number;
 }
 
 interface Projectile {
@@ -57,8 +61,14 @@ const Game: React.FC = () => {
   const [score, setScore] = useState(0);
   const [gameStarted, setGameStarted] = useState(false);
   const [gameOver, setGameOver] = useState(false);
-  // New constants for difficulty scaling
   const [difficultyFactor, setDifficultyFactor] = useState(1);
+
+  // New audio-related state and refs
+  const [volume, setVolume] = useState(0.5); // Initial volume set to 50%
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const audioBufferRef = useRef<AudioBuffer | null>(null);
+  const audioSourceRef = useRef<AudioBufferSourceNode | null>(null);
+  const gainNodeRef = useRef<GainNode | null>(null);
 
   // Refs for ship position and other states
   const shipPositionRef = useRef<Position>({
@@ -68,13 +78,66 @@ const Game: React.FC = () => {
   const gameAreaRef = useRef<HTMLDivElement>(null);
   const isDraggingRef = useRef(false);
   const lastPointerPositionRef = useRef<Position>({ x: 0, y: 0 });
-  const scoreRef = useRef(score); // Ref for score
+  const scoreRef = useRef(score);
   const gameTimeRef = useRef(0);
 
   // Update scoreRef whenever score changes
   useEffect(() => {
     scoreRef.current = score;
   }, [score]);
+
+  // Function to load and set up audio
+  const setupAudio = useCallback(async () => {
+    if (!audioContextRef.current) {
+      audioContextRef.current = new (window.AudioContext ||
+        (window as any).webkitAudioContext)();
+      gainNodeRef.current = audioContextRef.current.createGain();
+      gainNodeRef.current.connect(audioContextRef.current.destination);
+    }
+
+    if (!audioBufferRef.current) {
+      try {
+        const response = await fetch("/audio/main_music.mp3");
+        const arrayBuffer = await response.arrayBuffer();
+        audioBufferRef.current =
+          await audioContextRef.current.decodeAudioData(arrayBuffer);
+      } catch (error) {
+        console.error("Error loading audio:", error);
+      }
+    }
+  }, []);
+
+  // Function to play audio
+  const playAudio = useCallback(() => {
+    if (
+      audioContextRef.current &&
+      audioBufferRef.current &&
+      gainNodeRef.current
+    ) {
+      audioSourceRef.current = audioContextRef.current.createBufferSource();
+      audioSourceRef.current.buffer = audioBufferRef.current;
+      audioSourceRef.current.connect(gainNodeRef.current);
+      audioSourceRef.current.loop = true;
+      audioSourceRef.current.start();
+    }
+  }, []);
+
+  // Function to stop audio
+  const stopAudio = useCallback(() => {
+    if (audioSourceRef.current) {
+      audioSourceRef.current.stop();
+    }
+  }, []);
+
+  // Effect to update volume
+  useEffect(() => {
+    if (gainNodeRef.current) {
+      gainNodeRef.current.gain.setValueAtTime(
+        volume,
+        audioContextRef.current?.currentTime || 0,
+      );
+    }
+  }, [volume]);
 
   // Function to spawn a new obstacle at a random x position
   const spawnObstacle = useCallback(() => {
@@ -83,6 +146,7 @@ const Game: React.FC = () => {
       y: -OBSTACLE_SIZE,
       id: Date.now(),
       health: 1,
+      rotationSpeed: Math.random() * 360 + 180,
     };
     setObstacles((prev) => [...prev, newObstacle]);
   }, []);
@@ -99,7 +163,7 @@ const Game: React.FC = () => {
   }, []);
 
   // Function to start or restart the game
-  const startGame = () => {
+  const startGame = useCallback(() => {
     setGameStarted(true);
     setGameOver(false);
     setScore(0);
@@ -112,29 +176,30 @@ const Game: React.FC = () => {
       x: GAME_WIDTH / 2 - SHIP_SIZE / 2,
       y: GAME_HEIGHT - SHIP_SIZE,
     };
-  };
+    playAudio();
+  }, [playAudio]);
 
   const endGame = useCallback(() => {
     setGameOver(true);
     setGameStarted(false);
+    stopAudio();
     if (user && user.username) {
       addPointsMutation.mutate({
         username: user.username,
         points: scoreRef.current,
       });
     }
-  }, [user, addPointsMutation]);
+  }, [user, addPointsMutation, stopAudio]);
 
   // Function to update game state including movement and collision detection
   const updateGameState = useCallback(() => {
-    // Increase difficulty over time
-    gameTimeRef.current += 50; // 50ms per frame
+    gameTimeRef.current += 50;
     if (gameTimeRef.current % DIFFICULTY_INCREASE_INTERVAL === 0) {
       setDifficultyFactor((prev) =>
         Math.min(prev + 0.1, MAX_DIFFICULTY_FACTOR),
       );
     }
-    // Move obstacles down and check for collisions with the ship or bottom of the screen
+
     setObstacles((prev) =>
       prev
         .map((obs) => ({
@@ -159,14 +224,12 @@ const Game: React.FC = () => {
         }),
     );
 
-    // Move projectiles up and check if they are out of bounds
     setProjectiles((prev) =>
       prev
         .map((proj) => ({ ...proj, y: proj.y - 5 }))
         .filter((proj) => proj.y > 0 && proj.health > 0),
     );
 
-    // Check for collisions between projectiles and obstacles
     setProjectiles((prevProj) =>
       prevProj.map((proj) => {
         let updatedProj = { ...proj };
@@ -182,8 +245,8 @@ const Game: React.FC = () => {
                 ) {
                   updatedProj.health -= 1;
                   if (obs.health === 1) {
-                    setScore((s) => s + 20);
-                    return null; // Remove obstacle if health reaches zero
+                    setScore((s) => s + 5);
+                    return null;
                   }
                   return { ...obs, health: obs.health - 1 };
                 }
@@ -195,7 +258,6 @@ const Game: React.FC = () => {
       }),
     );
 
-    // Check if lives are depleted to end the game
     setLives((prev) => {
       if (prev <= 0) {
         endGame();
@@ -216,7 +278,7 @@ const Game: React.FC = () => {
         spawnObstacle,
         INITIAL_SPAWN_INTERVAL / difficultyFactor,
       );
-      shootingLoop = setInterval(shoot, 1000);
+      shootingLoop = setInterval(shoot, 750);
     }
 
     return () => {
@@ -224,7 +286,19 @@ const Game: React.FC = () => {
       clearInterval(obstacleSpawnLoop);
       clearInterval(shootingLoop);
     };
-  }, [gameStarted, gameOver, updateGameState, spawnObstacle, shoot]);
+  }, [
+    gameStarted,
+    gameOver,
+    updateGameState,
+    spawnObstacle,
+    shoot,
+    difficultyFactor,
+  ]);
+
+  // Effect to set up audio when component mounts
+  useEffect(() => {
+    setupAudio();
+  }, [setupAudio]);
 
   // Handle pointer down event to start dragging the ship
   const handlePointerDown = useCallback((e: React.PointerEvent) => {
@@ -247,8 +321,10 @@ const Game: React.FC = () => {
       const shipElement = gameAreaRef.current.querySelector(
         ".ship",
       ) as HTMLElement;
-      shipElement.style.left = `${shipPositionRef.current.x}px`;
-      shipElement.style.top = `${shipPositionRef.current.y}px`;
+      if (shipElement) {
+        shipElement.style.left = `${shipPositionRef.current.x}px`;
+        shipElement.style.top = `${shipPositionRef.current.y}px`;
+      }
     }
   }, []);
 
@@ -259,6 +335,11 @@ const Game: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white p-4">
+      <div className="flex flex-row items-center justify-start w-full pl-8">
+        <div className="text-left">
+          Difficulty: {difficultyFactor.toFixed(1)}x
+        </div>
+      </div>
       <div
         ref={gameAreaRef}
         className="relative bg-black border-4 border-purple-500 overflow-hidden touch-none"
@@ -268,8 +349,10 @@ const Game: React.FC = () => {
         onPointerUp={handlePointerUp}
         onPointerLeave={handlePointerUp}
       >
-        <Rocket
-          className="absolute text-yellow-400 cursor-move ship"
+        <Image
+          src={ship}
+          alt="Ship"
+          className="absolute cursor-move ship"
           style={{
             left: shipPositionRef.current.x,
             top: shipPositionRef.current.y,
@@ -281,31 +364,48 @@ const Game: React.FC = () => {
         {obstacles.map((obs) => (
           <div
             key={obs.id}
-            className="absolute rounded-full bg-red-500 "
+            className="absolute"
             style={{
               left: obs.x,
               top: obs.y,
               width: OBSTACLE_SIZE,
               height: OBSTACLE_SIZE,
+              animation: `spin ${360 / obs.rotationSpeed}s linear infinite`,
             }}
-          />
+          >
+            <Image
+              src={asteroid}
+              alt="Asteroid"
+              width={OBSTACLE_SIZE}
+              height={OBSTACLE_SIZE}
+            />
+          </div>
         ))}
         {projectiles.map((proj) => (
-          <div
+          <Image
             key={proj.id}
-            className={`absolute rounded-full bg-blue-500`}
+            src={lazer}
+            alt="Lazer"
+            className="absolute"
             style={{
               left: proj.x,
               top: proj.y,
               width: PROJECTILE_SIZE,
-              height: PROJECTILE_SIZE,
+              height: PROJECTILE_SIZE * 2,
             }}
           />
         ))}
       </div>
       <div className="mt-4">
-        Score: {score} | Lives: {lives} | Difficulty:{" "}
-        {difficultyFactor.toFixed(1)}x
+        Score: {score} | Lives: {lives} | Volume:{" "}
+        <input
+          type="range"
+          min="0"
+          max="1"
+          step="0.1"
+          value={volume}
+          onChange={(e) => setVolume(parseFloat(e.target.value))}
+        />
       </div>
       <AlertDialog open={!gameStarted || gameOver}>
         <AlertDialogContent>
@@ -331,6 +431,16 @@ const Game: React.FC = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      <style jsx global>{`
+        @keyframes spin {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+      `}</style>
     </div>
   );
 };

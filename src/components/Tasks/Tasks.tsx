@@ -60,6 +60,13 @@ const tasks = [
     action: "Start",
   },
   {
+    id: "Invite5",
+    icon: Users,
+    text: "Invite 5 friends to Galaxy Quest",
+    reward: 10000,
+    action: "Start",
+  },
+  {
     id: "ConnectWallet",
     icon: Wallet,
     text: "Connect wallet",
