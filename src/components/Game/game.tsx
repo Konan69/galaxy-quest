@@ -397,15 +397,7 @@ const Game: React.FC = () => {
         ))}
       </div>
       <div className="mt-4">
-        Score: {score} | Lives: {lives} | Volume:{" "}
-        <input
-          type="range"
-          min="0"
-          max="1"
-          step="0.1"
-          value={volume}
-          onChange={(e) => setVolume(parseFloat(e.target.value))}
-        />
+        Score: {score} | Lives: {lives}
       </div>
       <AlertDialog open={!gameStarted || gameOver}>
         <AlertDialogContent>
