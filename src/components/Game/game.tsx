@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-
+//
 import asteroid from "../../app/_assets/Sprites/asteroid.png";
 import ship from "../../app/_assets/Sprites/ship.png";
 import lazer from "../../app/_assets/Sprites/lazer.png";
