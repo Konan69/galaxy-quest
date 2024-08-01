@@ -35,8 +35,8 @@ const MAX_DIFFICULTY_FACTOR = 10;
 const DIFFICULTY_INCREASE_INTERVAL = 5000; // 5 seconds
 
 // Constants for powerups
-const POWERUP_DURATION = 7500; // 7 seconds
-const POWERUP_SPAWN_CHANCE = 0.1; // 10% chance to spawn a powerup when an obstacle is destroyed
+const POWERUP_DURATION = 1000; // 10 seconds
+const POWERUP_SPAWN_CHANCE = 0.2; // 20% chance to spawn a powerup when an obstacle is destroyed
 
 // Interfaces for game objects
 interface Obstacle {
