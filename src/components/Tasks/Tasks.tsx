@@ -52,13 +52,7 @@ const tasks = [
     reward: 2000,
     action: "Start",
   },
-  {
-    id: "Invite5",
-    icon: Users,
-    text: "Invite 5 friends to Galaxy Quest",
-    reward: 10000,
-    action: "Start",
-  },
+
   {
     id: "Invite5",
     icon: Users,
@@ -93,7 +87,7 @@ const TaskItem = ({
   isWalletTask?: boolean;
 }) => (
   <Card
-    className={`mb-4 ${completed ? "bg-gray-700" : "bg-gray-800"} border-gray-700`}
+    className={`mb-2 ${completed ? "bg-gray-700" : "bg-gray-800"} border-gray-700`}
   >
     <CardContent className="p-4 flex items-center justify-between">
       <div className="flex items-center space-x-4">
@@ -260,7 +254,7 @@ const TasksComponent = () => {
   );
 
   return (
-    <div className="h-full overflow-y-auto bg-gray-900 text-white p-8">
+    <div className="h-full overflow-y-auto bg-gray-900 text-white p-8 pb-16">
       <div className="mb-8">
         <h2 className="text-xl font-bold mb-4">Pending Tasks</h2>
         {pendingTasks.map((task, index) => (

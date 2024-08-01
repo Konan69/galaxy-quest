@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-//
+
 import asteroid from "../../app/_assets/Sprites/asteroid.png";
 import ship from "../../app/_assets/Sprites/ship.png";
 import lazer from "../../app/_assets/Sprites/lazer.png";
@@ -63,13 +63,6 @@ const Game: React.FC = () => {
   const [gameOver, setGameOver] = useState(false);
   const [difficultyFactor, setDifficultyFactor] = useState(1);
 
-  // New audio-related state and refs
-  const [volume, setVolume] = useState(0.5); // Initial volume set to 50%
-  const audioContextRef = useRef<AudioContext | null>(null);
-  const audioBufferRef = useRef<AudioBuffer | null>(null);
-  const audioSourceRef = useRef<AudioBufferSourceNode | null>(null);
-  const gainNodeRef = useRef<GainNode | null>(null);
-
   // Refs for ship position and other states
   const shipPositionRef = useRef<Position>({
     x: GAME_WIDTH / 2 - SHIP_SIZE / 2,
@@ -85,59 +78,6 @@ const Game: React.FC = () => {
   useEffect(() => {
     scoreRef.current = score;
   }, [score]);
-
-  // Function to load and set up audio
-  const setupAudio = useCallback(async () => {
-    if (!audioContextRef.current) {
-      audioContextRef.current = new (window.AudioContext ||
-        (window as any).webkitAudioContext)();
-      gainNodeRef.current = audioContextRef.current.createGain();
-      gainNodeRef.current.connect(audioContextRef.current.destination);
-    }
-
-    if (!audioBufferRef.current) {
-      try {
-        const response = await fetch("/audio/main_music.mp3");
-        const arrayBuffer = await response.arrayBuffer();
-        audioBufferRef.current =
-          await audioContextRef.current.decodeAudioData(arrayBuffer);
-      } catch (error) {
-        console.error("Error loading audio:", error);
-      }
-    }
-  }, []);
-
-  // Function to play audio
-  const playAudio = useCallback(() => {
-    if (
-      audioContextRef.current &&
-      audioBufferRef.current &&
-      gainNodeRef.current
-    ) {
-      audioSourceRef.current = audioContextRef.current.createBufferSource();
-      audioSourceRef.current.buffer = audioBufferRef.current;
-      audioSourceRef.current.connect(gainNodeRef.current);
-      audioSourceRef.current.loop = true;
-      audioSourceRef.current.start();
-    }
-  }, []);
-
-  // Function to stop audio
-  const stopAudio = useCallback(() => {
-    if (audioSourceRef.current) {
-      audioSourceRef.current.stop();
-    }
-  }, []);
-
-  // Effect to update volume
-  useEffect(() => {
-    if (gainNodeRef.current) {
-      gainNodeRef.current.gain.setValueAtTime(
-        volume,
-        audioContextRef.current?.currentTime || 0,
-      );
-    }
-  }, [volume]);
 
   // Function to spawn a new obstacle at a random x position
   const spawnObstacle = useCallback(() => {
@@ -176,20 +116,19 @@ const Game: React.FC = () => {
       x: GAME_WIDTH / 2 - SHIP_SIZE / 2,
       y: GAME_HEIGHT - SHIP_SIZE,
     };
-    playAudio();
-  }, [playAudio]);
+  }, []);
 
   const endGame = useCallback(() => {
     setGameOver(true);
     setGameStarted(false);
-    stopAudio();
+
     if (user && user.username) {
       addPointsMutation.mutate({
         username: user.username,
         points: scoreRef.current,
       });
     }
-  }, [user, addPointsMutation, stopAudio]);
+  }, [user, addPointsMutation]);
 
   // Function to update game state including movement and collision detection
   const updateGameState = useCallback(() => {
@@ -294,11 +233,6 @@ const Game: React.FC = () => {
     shoot,
     difficultyFactor,
   ]);
-
-  // Effect to set up audio when component mounts
-  useEffect(() => {
-    setupAudio();
-  }, [setupAudio]);
 
   // Handle pointer down event to start dragging the ship
   const handlePointerDown = useCallback((e: React.PointerEvent) => {

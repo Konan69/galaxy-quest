@@ -48,7 +48,7 @@ export default function LandingClient() {
   if (!username) return <div>Please set username in telegram</div>;
   if (createUserMutation.isPending) return <div>Loading...</div>;
   return (
-    <div className="overflow-y-auto">
+    <div className="overflow-y-auto pb-16">
       {storeUser && <DisplayData rows={getUserRows(storeUser)} />}
       Invite code = {inv_code}
     </div>
