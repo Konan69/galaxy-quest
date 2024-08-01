@@ -5,6 +5,9 @@ import Link from "next/link";
 import asteroid from "../../app/_assets/Sprites/asteroid.png";
 import ship from "../../app/_assets/Sprites/ship.png";
 import lazer from "../../app/_assets/Sprites/lazer.png";
+import rapidFireIcon from "../../app/_assets/Sprites/rapidfire.png";
+import shieldIcon from "../../app/_assets/Sprites/shield.png";
+import doublePointsIcon from "../../app/_assets/Sprites/doublepoints.png";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,14 +26,19 @@ const GAME_WIDTH = 300;
 const SHIP_SIZE = 40;
 const OBSTACLE_SIZE = 60;
 const PROJECTILE_SIZE = 5;
+const POWERUP_SIZE = 30;
 
 // Constants for difficulty scaling
-const INITIAL_OBSTACLE_SPEED = 2.75;
-const INITIAL_SPAWN_INTERVAL = 2500;
-const MAX_DIFFICULTY_FACTOR = 5;
+const INITIAL_OBSTACLE_SPEED = 3;
+const INITIAL_SPAWN_INTERVAL = 1500;
+const MAX_DIFFICULTY_FACTOR = 10;
 const DIFFICULTY_INCREASE_INTERVAL = 5000; // 5 seconds
 
-// Interfaces for obstacle and projectile states
+// Constants for powerups
+const POWERUP_DURATION = 7500; // 7 seconds
+const POWERUP_SPAWN_CHANCE = 0.1; // 10% chance to spawn a powerup when an obstacle is destroyed
+
+// Interfaces for game objects
 interface Obstacle {
   x: number;
   y: number;
@@ -51,12 +59,20 @@ interface Position {
   y: number;
 }
 
+interface Powerup {
+  x: number;
+  y: number;
+  id: number;
+  type: "rapidFire" | "shield" | "doublePoints";
+}
+
 const Game: React.FC = () => {
   const { user } = useUserStore();
   const addPointsMutation = useAddPointsMutation();
   // State hooks for game objects and status
   const [obstacles, setObstacles] = useState<Obstacle[]>([]);
   const [projectiles, setProjectiles] = useState<Projectile[]>([]);
+  const [powerups, setPowerups] = useState<Powerup[]>([]);
   const [lives, setLives] = useState(3);
   const [score, setScore] = useState(0);
   const [gameStarted, setGameStarted] = useState(false);
@@ -73,6 +89,11 @@ const Game: React.FC = () => {
   const lastPointerPositionRef = useRef<Position>({ x: 0, y: 0 });
   const scoreRef = useRef(score);
   const gameTimeRef = useRef(0);
+
+  // Refs for powerup states
+  const rapidFireRef = useRef(false);
+  const shieldRef = useRef(false);
+  const doublePointsRef = useRef(false);
 
   // Update scoreRef whenever score changes
   useEffect(() => {
@@ -110,12 +131,16 @@ const Game: React.FC = () => {
     setLives(3);
     setObstacles([]);
     setProjectiles([]);
+    setPowerups([]);
     setDifficultyFactor(1);
     gameTimeRef.current = 0;
     shipPositionRef.current = {
       x: GAME_WIDTH / 2 - SHIP_SIZE / 2,
       y: GAME_HEIGHT - SHIP_SIZE,
     };
+    rapidFireRef.current = false;
+    shieldRef.current = false;
+    doublePointsRef.current = false;
   }, []);
 
   const endGame = useCallback(() => {
@@ -129,6 +154,48 @@ const Game: React.FC = () => {
       });
     }
   }, [user, addPointsMutation]);
+
+  // Function to spawn a powerup
+  const spawnPowerup = useCallback((x: number, y: number) => {
+    if (Math.random() < POWERUP_SPAWN_CHANCE) {
+      const powerupTypes: Powerup["type"][] = [
+        "rapidFire",
+        "shield",
+        "doublePoints",
+      ];
+      const newPowerup: Powerup = {
+        x,
+        y,
+        id: Date.now(),
+        type: powerupTypes[Math.floor(Math.random() * powerupTypes.length)],
+      };
+      setPowerups((prev) => [...prev, newPowerup]);
+    }
+  }, []);
+
+  // Function to activate a powerup
+  const activatePowerup = useCallback((type: Powerup["type"]) => {
+    switch (type) {
+      case "rapidFire":
+        rapidFireRef.current = true;
+        setTimeout(() => {
+          rapidFireRef.current = false;
+        }, POWERUP_DURATION);
+        break;
+      case "shield":
+        shieldRef.current = true;
+        setTimeout(() => {
+          shieldRef.current = false;
+        }, POWERUP_DURATION);
+        break;
+      case "doublePoints":
+        doublePointsRef.current = true;
+        setTimeout(() => {
+          doublePointsRef.current = false;
+        }, POWERUP_DURATION);
+        break;
+    }
+  }, []);
 
   // Function to update game state including movement and collision detection
   const updateGameState = useCallback(() => {
@@ -156,7 +223,9 @@ const Game: React.FC = () => {
             shipPositionRef.current.y < obs.y + OBSTACLE_SIZE &&
             shipPositionRef.current.y + SHIP_SIZE > obs.y
           ) {
-            setLives((l) => l - 1);
+            if (!shieldRef.current) {
+              setLives((l) => l - 1);
+            }
             return false;
           }
           return true;
@@ -184,7 +253,9 @@ const Game: React.FC = () => {
                 ) {
                   updatedProj.health -= 1;
                   if (obs.health === 1) {
-                    setScore((s) => s + 5);
+                    const pointsGained = doublePointsRef.current ? 10 : 5;
+                    setScore((s) => s + pointsGained);
+                    spawnPowerup(obs.x, obs.y);
                     return null;
                   }
                   return { ...obs, health: obs.health - 1 };
@@ -197,13 +268,30 @@ const Game: React.FC = () => {
       }),
     );
 
+    setPowerups((prev) =>
+      prev
+        .map((powerup) => ({ ...powerup, y: powerup.y + 2 }))
+        .filter((powerup) => {
+          if (
+            shipPositionRef.current.x < powerup.x + POWERUP_SIZE &&
+            shipPositionRef.current.x + SHIP_SIZE > powerup.x &&
+            shipPositionRef.current.y < powerup.y + POWERUP_SIZE &&
+            shipPositionRef.current.y + SHIP_SIZE > powerup.y
+          ) {
+            activatePowerup(powerup.type);
+            return false;
+          }
+          return powerup.y < GAME_HEIGHT;
+        }),
+    );
+
     setLives((prev) => {
       if (prev <= 0) {
         endGame();
       }
       return prev;
     });
-  }, [difficultyFactor]);
+  }, [difficultyFactor, spawnPowerup, activatePowerup]);
 
   // Effect to start and manage game loops
   useEffect(() => {
@@ -217,7 +305,12 @@ const Game: React.FC = () => {
         spawnObstacle,
         INITIAL_SPAWN_INTERVAL / difficultyFactor,
       );
-      shootingLoop = setInterval(shoot, 750);
+      shootingLoop = setInterval(() => {
+        shoot();
+        if (rapidFireRef.current) {
+          setTimeout(shoot, 150);
+        }
+      }, 1000);
     }
 
     return () => {
@@ -295,6 +388,17 @@ const Game: React.FC = () => {
             touchAction: "none",
           }}
         />
+        {shieldRef.current && (
+          <div
+            className="absolute border-4 border-blue-500 rounded-full"
+            style={{
+              left: shipPositionRef.current.x - 5,
+              top: shipPositionRef.current.y - 5,
+              width: SHIP_SIZE + 10,
+              height: SHIP_SIZE + 10,
+            }}
+          />
+        )}
         {obstacles.map((obs) => (
           <div
             key={obs.id}
@@ -329,9 +433,36 @@ const Game: React.FC = () => {
             }}
           />
         ))}
+        {powerups.map((powerup) => (
+          <Image
+            key={powerup.id}
+            src={
+              powerup.type === "rapidFire"
+                ? rapidFireIcon
+                : powerup.type === "shield"
+                  ? shieldIcon
+                  : doublePointsIcon
+            }
+            alt={powerup.type}
+            className="absolute"
+            style={{
+              left: powerup.x,
+              top: powerup.y,
+              width: POWERUP_SIZE,
+              height: POWERUP_SIZE,
+            }}
+          />
+        ))}
       </div>
       <div className="mt-4">
         Score: {score} | Lives: {lives}
+      </div>
+      <div className="mt-2">
+        {rapidFireRef.current && (
+          <span className="mr-2">Rapid Fire Active</span>
+        )}
+        {shieldRef.current && <span className="mr-2">Shield Active</span>}
+        {doublePointsRef.current && <span>Double Points Active</span>}
       </div>
       <AlertDialog open={!gameStarted || gameOver}>
         <AlertDialogContent>
