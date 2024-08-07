@@ -18,7 +18,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useUserStore } from "@/components/Store/userStore";
-import { useAddPointsMutation } from "@/mutations/mutations";
+import { useAddPointsMutation } from "@/lib/queries";
 
 // Constants for game dimensions and element sizes
 const GAME_HEIGHT = 500;

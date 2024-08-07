@@ -1,8 +1,5 @@
 "use client";
-import {
-  useGetUserQuery,
-  useRegisterUserMutation,
-} from "@/mutations/mutations";
+import { useGetUserQuery, useRegisterUserMutation } from "@/lib/queries";
 import {
   DisplayData,
   DisplayDataRow,
@@ -12,6 +9,7 @@ import { useMemo, useEffect } from "react";
 import { useUserStore, useTelegramId } from "@/components/Store/userStore";
 
 import { User } from "@prisma/client";
+import { useGetUser } from "@/hooks/useCache";
 
 function getUserRows(user: User): DisplayDataRow[] {
   return [
@@ -29,17 +27,18 @@ export default function LandingClient() {
     [initData?.user?.username],
   ); //gek[]
   const inv_code = initData?.startParam;
-  const { user: storeUser } = useUserStore();
+  const user = useGetUser();
+
   const { telegramId, setTelegramId } = useTelegramId();
   const createUserMutation = useRegisterUserMutation();
   const getUserMutation = useGetUserQuery();
 
   useEffect(() => {
-    if (!storeUser && username) {
+    if (!user && username) {
       createUserMutation.mutate({ username, inv_code } as any);
       setTelegramId(initData?.user?.id);
     }
-    if (storeUser) {
+    if (user) {
       getUserMutation.mutate({ username } as any);
       setTelegramId(initData?.user?.id);
     }
@@ -49,7 +48,7 @@ export default function LandingClient() {
   if (createUserMutation.isPending) return <div>Loading...</div>;
   return (
     <div className="overflow-y-auto pb-16">
-      {storeUser && <DisplayData rows={getUserRows(storeUser)} />}
+      {user && <DisplayData rows={getUserRows(user)} />}
       Invite code = {inv_code}
     </div>
   );

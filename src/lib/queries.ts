@@ -25,6 +25,20 @@ const updateWallet = async({username, wallet} : { username: string; wallet: stri
   const { data } = await axios.post("/api/wallet", { username, wallet });
   return data
 }
+const addBall = async ({
+  username,
+  riskLevel,
+  userBalance,
+  betAmount,
+}: any) => {
+  const { data } = await axios.post(`/api/game`, {
+    username,
+    riskLevel,
+    userBalance,
+    betAmount,
+  });
+  return data;
+};
 //prettier-ignore
 const isMemeber = async ({ userId, groupId }: { userId: number; groupId: string | number }) => {
   const { data } = await axios.get<MembershipCheckResponse>(
@@ -50,7 +64,27 @@ export const useRegisterUserMutation = () => {
   return useMutation({
     mutationFn: createUser,
     onSuccess: (data) => {
-      queryClient.setQueryData(["user", data.username], data), setUser(data);
+      queryClient.setQueryData(["user"], data), setUser(data);
+    },
+  });
+};
+
+export const useAddBallMutation = () => {
+  const { user: storeUser, setUser, clearError, setError } = useUserStore();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: addBall,
+    onMutate: () => {
+      clearError();
+    },
+    onSuccess: (data) => {
+      queryClient.setQueryData(["user", data.username], data);
+
+      return data;
+    },
+    onError: (error) => {
+      setError(new Error(`Unknown error: ${String(error)}`));
+      console.error(error);
     },
   });
 };
@@ -61,7 +95,7 @@ export const useGetUserQuery = () => {
   return useMutation({
     mutationFn: getUser,
     onSuccess: (data) => {
-      queryClient.setQueryData(["user", data.username], data);
+      queryClient.setQueryData(["user"], data);
       setUser(data);
     },
     onError: (error) => {
@@ -69,22 +103,6 @@ export const useGetUserQuery = () => {
     },
   });
 };
-
-// export const useIsMemberQuery = () => {
-//   const { setUser, setError } = useUserStore();
-//   const queryClient = useQueryClient();
-//   return useMutation({
-//     mutationFn: isMemeber,
-//     onSuccess: (data) => {
-//       queryClient.setQueryData(["user", data.username], data);
-//       setUser(data);
-//     },
-//     onError: (error) => {
-//       setError(new Error(`Unknown error: ${String(error)}`));
-//       setUser(null);
-//     },
-//   });
-// };
 
 export const useMembershipCheck = ({
   userId,
@@ -119,7 +137,7 @@ export const useAddPointsMutation = () => {
   return useMutation({
     mutationFn: addPoints,
     onSuccess: (data) => {
-      queryClient.setQueryData(["user", data.username], data);
+      queryClient.setQueryData(["user"], data);
       setUser(data);
     },
     onError: (error) => {
@@ -138,7 +156,7 @@ export const useUpdateTaskMutation = () => {
       clearError();
     },
     onSuccess: (data) => {
-      queryClient.setQueryData(["user", data.username], data);
+      queryClient.setQueryData(["user"], data);
       setUser(data);
     },
     onError: (error) => {
@@ -164,8 +182,7 @@ export const useSetWalletMutation = () => {
   return useMutation({
     mutationFn: updateWallet,
     onSuccess: (data) => {
-      queryClient.setQueryData(["user", data.username], data);
-      setUser(data);
+      queryClient.setQueryData(["user"], data);
     },
     onError: (error) => {
       setError(new Error(`Unknown error: ${String(error)}`));

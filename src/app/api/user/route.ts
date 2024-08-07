@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/utils";
+import { ObjectId } from "mongodb";
 
 export async function GET(req: NextRequest) {
   const username = req.nextUrl.searchParams.get("username");
@@ -48,7 +49,8 @@ export async function POST(req: NextRequest) {
       update: {},
       create: {
         username,
-        invitedBy: inv_code || undefined,
+        invitedBy:
+          inv_code && ObjectId.isValid(inv_code) ? inv_code : undefined,
         tasks: {
           create: {}, // This will create a UserTasks record with default values
         },
@@ -57,7 +59,7 @@ export async function POST(req: NextRequest) {
     });
 
     // If there's an invitedBy, update the inviter's invites array
-    if (inv_code) {
+    if (inv_code && ObjectId.isValid(inv_code)) {
       try {
         await prisma.user.update({
           where: { id: inv_code },

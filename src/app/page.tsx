@@ -33,7 +33,7 @@ export default function Home() {
             Landing
           </Cell>
         </Link>
-        <Link href="/game">
+        <Link href="/shooter">
           <Cell
             before={
               <Image src={tonSvg.src} style={{ backgroundColor: "#007AFF" }} />

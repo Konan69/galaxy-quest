@@ -10,13 +10,13 @@ import {
   Wallet,
   SparklesIcon,
 } from "lucide-react";
-
-import { useTelegramId, useUserStore } from "@/components/Store/userStore";
+import { useTelegramId } from "@/components/Store/userStore";
+import { useGetUser } from "@/hooks/useCache";
 import {
   useMembershipCheck,
   useSetWalletMutation,
   useUpdateTaskMutation,
-} from "@/mutations/mutations";
+} from "@/lib/queries";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "../ui/use-toast";
 import {
@@ -131,7 +131,7 @@ const TasksComponent = () => {
   const updateTask = useUpdateTaskMutation();
   const updateWallet = useSetWalletMutation();
   const demoGroup = -1002175023524;
-  const { user: storeUser, setUser } = useUserStore();
+  const user = useGetUser();
   const { telegramId } = useTelegramId();
   const [isOpen, setIsOpen] = React.useState(false);
   const [checkMembership, setCheckMembership] = useState(false);
@@ -148,7 +148,7 @@ const TasksComponent = () => {
     updateTask.mutate(
       {
         taskId: task.id,
-        username: storeUser?.username!,
+        username: user?.username!,
         points: task.reward,
       },
       {
@@ -203,7 +203,7 @@ const TasksComponent = () => {
       setTimeout(() => taskUpdater(task), 3000);
     }
     if (task.id === "Invite5") {
-      storeUser?.invites! >= 5
+      user?.invites! >= 5
         ? taskUpdater(task)
         : toast({
             variant: "default",
@@ -216,7 +216,7 @@ const TasksComponent = () => {
   };
 
   useEffect(() => {
-    if (wallet && !walletUpdated.current && !storeUser?.tasks?.ConnectWallet) {
+    if (wallet && !walletUpdated.current && !user?.tasks?.ConnectWallet) {
       walletUpdated.current = true;
       const connectWalletTask = tasks.find(
         (task) => task.id === "ConnectWallet",
@@ -224,7 +224,7 @@ const TasksComponent = () => {
       if (connectWalletTask) {
         updateWallet.mutate(
           {
-            username: storeUser?.username!,
+            username: user?.username!,
             wallet: address,
           },
           {
@@ -244,13 +244,13 @@ const TasksComponent = () => {
         );
       }
     }
-  }, [wallet, storeUser]);
+  }, [wallet, user]);
 
   const pendingTasks = tasks.filter(
-    (task) => !storeUser?.tasks?.[task.id as keyof typeof storeUser.tasks],
+    (task) => !user?.tasks?.[task.id as keyof typeof user.tasks],
   );
   const completedTasks = tasks.filter(
-    (task) => storeUser?.tasks?.[task.id as keyof typeof storeUser.tasks],
+    (task) => user?.tasks?.[task.id as keyof typeof user.tasks],
   );
 
   return (
