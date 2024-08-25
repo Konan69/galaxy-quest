@@ -26,14 +26,7 @@ export default function LandingClient() {
   const inv_code = initData?.startParam;
   const user = useGetUser();
 
-  if (!username)
-    return (
-      <div className="text-center text-white">
-        Please set username in telegram
-      </div>
-    );
-
-  useGetUserQuery(username);
+  useGetUserQuery(username!);
 
   const { setTelegramId } = useTelegramId();
   const createUserMutation = useRegisterUserMutation();
@@ -50,6 +43,12 @@ export default function LandingClient() {
 
   if (createUserMutation.isPending)
     return <div className="text-center text-white">Loading...</div>;
+  if (!username)
+    return (
+      <div className="text-center text-white">
+        Please set username in telegram
+      </div>
+    );
 
   return (
     <div className="min-h-screen min-w-full text-white p-2 overflow-y-auto pb-16 font-inter">
@@ -96,7 +95,7 @@ export default function LandingClient() {
 
         <div className="pt-12">
           <h3 className="text-lg pl-2 pb-1 font-semibold mb-2 text-white">
-            NFT'S
+            NFTs
           </h3>
           <Carousel className="w-full">
             <CarouselContent className="-ml-2 md:-ml-4 gap-x-2">
