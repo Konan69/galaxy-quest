@@ -21,6 +21,7 @@ export class BallManager {
     startX?: number,
     multiplier?: number,
     riskLevel?: string,
+    currentBetAmount?: number,
   ) => void;
   private stack: number[]; // Stack to store the last 6 entries
 
@@ -34,6 +35,7 @@ export class BallManager {
       startX?: number,
       multiplier?: number,
       riskLevel?: string,
+      currentBetAmount?: number,
     ) => void,
   ) {
     this.balls = [];
@@ -47,7 +49,12 @@ export class BallManager {
     this.stack = [];
   }
 
-  addBall(startX?: number, multiplier?: number, riskLevel?: string) {
+  addBall(
+    startX?: number,
+    multiplier?: number,
+    riskLevel?: string,
+    currentBetAmount?: number,
+  ) {
     if (riskLevel && riskLevel !== this.riskType) {
       this.riskType = riskLevel;
       this.sinks = createSinks(riskLevel);
@@ -62,7 +69,7 @@ export class BallManager {
       this.sinks,
       (index) => {
         this.balls = this.balls.filter((ball) => ball !== newBall);
-        this.onFinish?.(index, startX, multiplier, riskLevel);
+        this.onFinish?.(index, startX, multiplier, riskLevel, currentBetAmount);
       },
     );
     this.balls.push(newBall);

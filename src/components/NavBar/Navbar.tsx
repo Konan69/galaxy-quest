@@ -5,7 +5,7 @@ export default function Navbar() {
   return (
     <div
       className="fixed bottom-0 min-w-full flex justify-around items-center z-10 
-      text-xs backdrop-filter backdrop-blur-md bg-opacity-40 bg-gray-700
+      text-xs  bg-customdark
       opacity-90 h-14"
     >
       <Link href="/landing">

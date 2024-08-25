@@ -47,7 +47,7 @@ const isMemeber = async ({ userId, groupId }: { userId: number; groupId: string 
   return data;
 }
 
-const getUser = async ({ username }: { username: string }) => {
+const getUser = async (username: string) => {
   const { data } = await axios.get(`/api/user?username=${username}`);
   return data;
 };
@@ -58,28 +58,25 @@ const updateTask = async ({ taskId, username, points, }: { taskId: string; usern
   return data;
 };
 export const useRegisterUserMutation = () => {
-  const { user: storeUser, setUser } = useUserStore();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: createUser,
     onSuccess: (data) => {
-      queryClient.setQueryData(["user"], data), setUser(data);
+      queryClient.setQueryData(["user"], data);
     },
   });
 };
 
 export const useAddBallMutation = () => {
-  const { user: storeUser, setUser, clearError, setError } = useUserStore();
-  const queryClient = useQueryClient();
+  const { clearError, setError } = useUserStore();
+
   return useMutation({
     mutationFn: addBall,
     onMutate: () => {
       clearError();
     },
     onSuccess: (data) => {
-      queryClient.setQueryData(["user", data.username], data);
-
       return data;
     },
     onError: (error) => {
@@ -89,18 +86,13 @@ export const useAddBallMutation = () => {
   });
 };
 
-export const useGetUserQuery = () => {
-  const { user: storeUser, setUser } = useUserStore();
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: getUser,
-    onSuccess: (data) => {
-      queryClient.setQueryData(["user"], data);
-      setUser(data);
-    },
-    onError: (error) => {
-      setUser(null);
-    },
+export const useGetUserQuery = (username: string) => {
+  return useQuery({
+    queryKey: ["user"],
+    queryFn: () => getUser(username),
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 30,
+    enabled: !!username,
   });
 };
 

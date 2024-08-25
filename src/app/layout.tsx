@@ -7,6 +7,7 @@ import QueryClientProvider from "@/lib/QueryClientProvider";
 import "@telegram-apps/telegram-ui/dist/styles.css";
 import "normalize.css/normalize.css";
 import "./_assets/globals.css";
+import bg from "../../public/bg.png";
 import Navbar from "@/components/NavBar/Navbar";
 
 export const metadata: Metadata = {
@@ -17,7 +18,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="en">
-      <body>
+      <body
+        className="min-h-screen min-w-full bg-contain bg-center bg-repeat-y sm:bg-contain md:bg-cover lg:bg-fixed"
+        style={{ backgroundImage: "url(/bg.png)" }}
+      >
         <QueryClientProvider>
           <div className="relative min-h-screen pb-16">
             <Root>{children}</Root> {/* Main content */}

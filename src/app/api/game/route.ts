@@ -80,18 +80,12 @@ export async function POST(request: NextRequest) {
   const pattern: string[] = [];
 
   // Special cases for 0 and 17
-  if (Math.random() <= 0.01) {
-    // 1% chance for extreme outcomes
-    outcome = Math.random() < 0.5 ? 0 : 17;
-    pattern.fill(outcome === 0 ? "L" : "R", 0, TOTAL_DROPS);
-  } else {
-    for (let i = 0; i < TOTAL_DROPS; i++) {
-      if (Math.random() > 0.5) {
-        pattern.push("R");
-        outcome++;
-      } else {
-        pattern.push("L");
-      }
+  for (let i = 0; i < TOTAL_DROPS; i++) {
+    if (Math.random() > 0.5) {
+      pattern.push("R");
+      outcome++;
+    } else {
+      pattern.push("L");
     }
   }
 
@@ -116,7 +110,7 @@ export async function POST(request: NextRequest) {
       multiplier,
       pattern,
       riskLevel,
-      newBalance,
+
       // updatedUser,
     });
   } catch (error) {

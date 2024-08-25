@@ -15,6 +15,7 @@ export class Ball {
   private sinks: Sink[];
   private onFinish: (index: number) => void;
   private waves: Wave[]; // Added waves property to keep track of wave instances
+  betAmount: number | undefined;
 
   constructor(
     x: number,

@@ -6,35 +6,32 @@ import TasksComponent from "@/components/Tasks/Tasks";
 import { GamesComponent } from "@/components/Games/Games";
 import Coins from "@/components/Icons/Coins";
 
-const EarnNav = memo(
-  ({
-    activeTab,
-    setActiveTab,
-  }: {
-    activeTab: string;
-    setActiveTab: (tab: string) => void;
-  }) => {
-    return (
-      <div className="mx-auto w-48 flex justify-around items-center rounded-3xl text-xs backdrop-filter backdrop-blur-md bg-opacity-40 bg-gray-700 opacity-90">
-        <button
-          onClick={() => setActiveTab("game")}
-          className={`text-center w-1/2 ${activeTab === "game" ? "text-white bg-purple-500 rounded-l-3xl" : "text-[#85827d]"}`}
-        >
-          <Coins className="w-6 h-6 mx-auto" />
-          <p className="mt-1">Arcade</p>
-        </button>
-        <button
-          onClick={() => setActiveTab("tasks")}
-          className={`text-center w-1/2 ${activeTab === "tasks" ? "text-white bg-purple-500 rounded-r-3xl" : "text-[#85827d]"}`}
-        >
-          <Coins className="w-6 h-6 mx-auto" />
-          <p className="mt-1">Tasks</p>
-        </button>
-      </div>
-    );
-  },
-);
-
+const EarnNav = ({
+  activeTab,
+  setActiveTab,
+}: {
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
+}) => {
+  return (
+    <div className="mx-auto w-48 flex justify-around items-center rounded-3xl text-xs backdrop-filter backdrop-blur-md bg-opacity-40 bg-gray-700 opacity-90">
+      <button
+        onClick={() => setActiveTab("game")}
+        className={`text-center w-1/2 ${activeTab === "game" ? "text-white bg-purple-500 rounded-l-3xl" : "text-[#85827d]"}`}
+      >
+        <Coins className="w-6 h-6 mx-auto" />
+        <p className="mt-1">Arcade</p>
+      </button>
+      <button
+        onClick={() => setActiveTab("tasks")}
+        className={`text-center w-1/2 ${activeTab === "tasks" ? "text-white bg-purple-500 rounded-r-3xl" : "text-[#85827d]"}`}
+      >
+        <Coins className="w-6 h-6 mx-auto" />
+        <p className="mt-1">Tasks</p>
+      </button>
+    </div>
+  );
+};
 EarnNav.displayName = "EarnNav";
 
 const tabVariants = {
