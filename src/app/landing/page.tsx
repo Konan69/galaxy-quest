@@ -18,7 +18,7 @@ import Astro from "../_assets/Asronaut.svg";
 import Image from "next/image";
 
 import { TonConnectButton } from "@tonconnect/ui-react";
-import { RocketIcon } from "lucide-react";
+import { Copy, CopyIcon, RocketIcon } from "lucide-react";
 
 export default function LandingClient() {
   const initData = useInitData();
@@ -63,35 +63,40 @@ export default function LandingClient() {
             </div>
             <AvatarFallback>AS</AvatarFallback>
           </Avatar>
-          <div className="flex flex-row pt-4 pb-6">
-            <h2 className="text-xl font-bold">
-              {user?.username.toUpperCase()}
-            </h2>
-          </div>
+
+          <h2 className="text-xl font-bold flex flex-row pb-6 pt-4">
+            {user?.username.toUpperCase()}
+            <button className="ml-2 pl-1 text-white">
+              <Copy />
+            </button>
+          </h2>
         </div>
 
-        <Card className="bg-[#02080E] rounded-xl text-slate-100 m-4">
-          <CardContent className="p-2 pl-6">
-            <div className="">Cadet</div>
-            <div className=" flex justify-between items-center">
-              <div className="min-w-64">
-                <Progress
-                  value={60}
-                  className="w-full h-2 rounded-full border-white"
-                  style={{
-                    background:
-                      "linear-gradient(to right, #020913, #092651, #0B2F64, #0D3979)",
-                  }}
-                />
-                <div className="flex justify-end pt-1">{user?.points}/150</div>
+        <div className="relative font-inter text-slate-100 ">
+          <div className="absolute -top-3 left-10 text-m bg-[#02080E] px-2">
+            Points
+          </div>
+          <Card className="bg-[#02080E] rounded-xl border-[1.5px] border-white m-4">
+            <CardContent className="p-4">
+              <div className="text-lg font-sans mb-2 text-white">Cadet</div>
+              <div className="flex items-center space-x-2">
+                <div className="flex-grow min-w-64">
+                  <Progress
+                    value={60}
+                    style={{
+                      background:
+                        "linear-gradient(to right, #020913, #092651, #0B2F64, #0D3979)",
+                    }}
+                  />
+                  <div className="text-right text-lg pt-1 text-white mt-1">
+                    {user?.points}/150
+                  </div>
+                </div>
+                <RocketIcon className="w-6 h-6 text-white " />
               </div>
-
-              <div className="p-4 flex justify-end">
-                <RocketIcon />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </div>
 
         <div className="pt-12">
           <h3 className="text-lg pl-2 pb-1 font-semibold mb-2 text-white">

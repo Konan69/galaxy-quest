@@ -20,6 +20,10 @@ const config = {
     extend: {
       colors: {
         customdark: "#08050F",
+        Home: "#699BF7",
+        Earn: "#FFD233",
+        Shop: "#4ECB71",
+        Leaderboard: "#F24E1E",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
