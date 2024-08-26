@@ -1,86 +1,21 @@
 "use client";
 
-import React, { memo, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React from "react";
+
 import TasksComponent from "@/components/Tasks/Tasks";
 import { GamesComponent } from "@/components/Games/Games";
-import Coins from "@/components/Icons/Coins";
-
-const EarnNav = ({
-  activeTab,
-  setActiveTab,
-}: {
-  activeTab: string;
-  setActiveTab: (tab: string) => void;
-}) => {
-  return (
-    <div className="mx-auto w-48 flex justify-around items-center rounded-3xl text-xs backdrop-filter backdrop-blur-md bg-opacity-40 bg-gray-700 opacity-90">
-      <button
-        onClick={() => setActiveTab("game")}
-        className={`text-center w-1/2 ${activeTab === "game" ? "text-white bg-purple-500 rounded-l-3xl" : "text-[#85827d]"}`}
-      >
-        <Coins className="w-6 h-6 mx-auto" />
-        <p className="mt-1">Arcade</p>
-      </button>
-      <button
-        onClick={() => setActiveTab("tasks")}
-        className={`text-center w-1/2 ${activeTab === "tasks" ? "text-white bg-purple-500 rounded-r-3xl" : "text-[#85827d]"}`}
-      >
-        <Coins className="w-6 h-6 mx-auto" />
-        <p className="mt-1">Tasks</p>
-      </button>
-    </div>
-  );
-};
-EarnNav.displayName = "EarnNav";
-
-const tabVariants = {
-  enter: (direction: number) => ({
-    x: direction > 0 ? 1000 : -1000,
-    opacity: 0,
-  }),
-  center: {
-    zIndex: 1,
-    x: 0,
-    opacity: 1,
-  },
-  exit: (direction: number) => ({
-    zIndex: 0,
-    x: direction < 0 ? 1000 : -1000,
-    opacity: 0,
-  }),
-};
 
 const EarnPage = () => {
-  const [[activeTab, direction], setActiveTab] = useState(["game", 0]);
-
   return (
-    <div className="bg-gray-900">
-      <div className="min-w-full mx-auto pt-16">
-        <EarnNav
-          activeTab={activeTab}
-          setActiveTab={(tab) => setActiveTab([tab, tab === "game" ? -1 : 1])}
-        />
+    <div className="max-h-full pt-26 overflow-auto text-white">
+      <div className="text-center py-8">
+        <h1 className="text-3xl font-bold">Galaxy Earn</h1>
+        <p className="text-lg text-gray-400">
+          Play games and complete tasks to earn galaxy points and level up
+        </p>
       </div>
-      <div className="max-h-full pt-26 overflow-auto">
-        <AnimatePresence initial={false} custom={direction}>
-          <motion.div
-            key={activeTab}
-            custom={direction}
-            variants={tabVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{
-              x: { type: "spring", stiffness: 300, damping: 30 },
-              opacity: { duration: 0.2 },
-            }}
-            className="absolute w-full"
-          >
-            {activeTab === "game" ? <GamesComponent /> : <TasksComponent />}
-          </motion.div>
-        </AnimatePresence>
-      </div>
+      <GamesComponent />
+      <TasksComponent />
     </div>
   );
 };

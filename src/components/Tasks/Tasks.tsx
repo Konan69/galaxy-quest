@@ -254,9 +254,9 @@ const TasksComponent = () => {
   );
 
   return (
-    <div className="h-full overflow-y-auto bg-gray-900 text-white p-8 pb-16">
+    <div className="h-full overflow-y-auto text-white p-8 pb-16">
       <div className="mb-8">
-        <h2 className="text-xl font-bold mb-4">Pending Tasks</h2>
+        <h2 className="text-xl font-bold mb-4">Tasks</h2>
         {pendingTasks.map((task, index) => (
           <TaskItem
             key={index}

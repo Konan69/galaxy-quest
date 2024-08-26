@@ -1,14 +1,21 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Rocket, CircleDollarSignIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel"; // Assuming this is your ShadCN carousel
+import { Rocket, CircleDollarSignIcon } from "lucide-react"; // Replace with custom icons if necessary
 
 interface Game {
   icon: React.ElementType;
   text: string;
   action: string;
   link: string;
+  image: string;
 }
 
 const Games: Game[] = [
@@ -17,68 +24,72 @@ const Games: Game[] = [
     text: "Galaxy Adventure",
     action: "Start",
     link: "/shooter",
+    image: "/Galaxy.png",
   },
   {
     icon: CircleDollarSignIcon,
     text: "Plinko",
     action: "Start",
     link: "/plinko",
+    image: "/Plinko.png",
   },
 ];
 
 interface GameItemsProps extends Game {
-  onNavigate: (link: string) => void;
+  className?: string;
 }
 
 const GameItems: React.FC<GameItemsProps> = React.memo(
-  ({ icon: Icon, text, action, link, onNavigate }) => {
-    const handleClick = useCallback(() => {
-      onNavigate(link);
-    }, [link, onNavigate]);
-
+  ({ icon: Icon, text, link, className, image }) => {
     return (
-      <Card className="bg-gray-800 border-gray-700 mb-4">
-        <CardContent className="p-4 flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <div className="bg-gray-700 p-2 rounded-full">
-              <Icon className="text-purple-500 w-6 h-6" />
-            </div>
-            <div>
-              <p className="text-white text-base font-semibold">{text}</p>
-            </div>
+      <Card className={`bg-gray-800 border-gray-700 w-72 ${className}`}>
+        <CardContent className="px-0">
+          <div className="relative w-full h-32 mb-4">
+            <Image
+              src={image}
+              alt={text}
+              layout="fill"
+              objectFit="cover"
+              className="rounded"
+            />
           </div>
-          <Button
-            onClick={handleClick}
-            className="bg-purple-500 text-white hover:bg-purple-600"
-          >
-            {action}
-          </Button>
+          <div className="flex items-center justify-between px-2">
+            <div className="flex items-center space-x-4">
+              <div className="bg-gray-700 p-2 rounded-full">
+                <Icon className="text-purple-500 w-6 h-6" />
+              </div>
+              <div>
+                <p className="text-white text-base font-semibold">{text}</p>
+                <p className="text-gray-400 text-sm">Arcade</p>
+              </div>
+            </div>
+            <Link href={link} passHref>
+              <Button className="bg-orange-500 text-white hover:bg-orange-600 p-2 rounded-full">
+                &rarr;
+              </Button>
+            </Link>
+          </div>
         </CardContent>
       </Card>
     );
   },
 );
 
-GameItems.displayName = "GameItems";
-
 export const GamesComponent: React.FC = () => {
-  const router = useRouter();
-  const navigate = useCallback(
-    (link: string) => {
-      router.push(link);
-    },
-    [router],
-  );
-
-  const memoizedGames = useMemo(() => Games, []);
-
   return (
-    <div className="overflow-y-auto bg-gray-900 text-white p-8">
-      <div>
-        {memoizedGames.map((game, index) => (
-          <GameItems key={index} {...game} onNavigate={navigate} />
-        ))}
-      </div>
+    <div className="overflow-hidden text-white py-8">
+      <Carousel className="w-full h-full">
+        <CarouselContent>
+          {Games.map((game, index) => (
+            <CarouselItem
+              key={index}
+              className="pl-2 md:pl-4 basis-4/5 md:basis-1/2"
+            >
+              <GameItems key={index} {...game} />
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+      </Carousel>
     </div>
   );
 };
