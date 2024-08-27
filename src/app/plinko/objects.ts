@@ -80,11 +80,11 @@ const HIGH_MULTIPLIERS: { [key: number]: number } = {
 };
 export const createObstacles = (): Obstacle[] => {
   const obstacles: Obstacle[] = [];
-  const rows = 18;
-  for (let row = 2; row < rows; row++) {
+  const rows = 17;
+  for (let row = 3; row < rows; row++) {
     const numObstacles = row + 1;
     const y = 0 + row * 35;
-    const spacing = 36;
+    const spacing = 28;
     for (let col = 0; col < numObstacles; col++) {
       const x = WIDTH / 2 - spacing * (row / 2 - col);
       obstacles.push({ x: pad(x), y: pad(y), radius: obstacleRadius });
@@ -92,7 +92,6 @@ export const createObstacles = (): Obstacle[] => {
   }
   return obstacles;
 };
-
 export const createSinks = (type: string): Sink[] => {
   const sinks = [];
   const SPACING = obstacleRadius * 2;
@@ -100,8 +99,8 @@ export const createSinks = (type: string): Sink[] => {
   for (let i = 0; i < NUM_SINKS; i++) {
     const x =
       WIDTH / 2 + sinkWidth * (i - Math.floor(NUM_SINKS / 2)) - SPACING * 1.5;
-    const y = HEIGHT - 170;
-    const width = sinkWidth;
+    const y = HEIGHT - 160;
+    const width = sinkWidth * 1.1;
     const height = width;
     if (type == "Low")
       sinks.push({ x, y, width, height, multiplier: LOW_MULTIPLIERS[i + 1] });
