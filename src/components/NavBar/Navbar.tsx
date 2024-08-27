@@ -28,7 +28,7 @@ const NavItem = ({
 }) => (
   <Link href={href}>
     <div
-      className={`flex flex-col items-center justify-center w-1/5 relative ${colorMap[label]}`}
+      className={`flex flex-col items-center justify-center relative ${colorMap[label]}`}
     >
       <Icon className={`w-8 h-8`} />
       <p className="mt-1">{label}</p>

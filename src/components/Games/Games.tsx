@@ -1,95 +1,96 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { ChevronRight, CircleDollarSign, Rocket } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
-} from "@/components/ui/carousel"; // Assuming this is your ShadCN carousel
-import { Rocket, CircleDollarSignIcon } from "lucide-react"; // Replace with custom icons if necessary
+} from "@/components/ui/carousel";
 
 interface Game {
   icon: React.ElementType;
-  text: string;
-  action: string;
+  name: string;
+  category: string;
   link: string;
   image: string;
 }
-
 const Games: Game[] = [
   {
+    name: "Galaxy Adventures",
     icon: Rocket,
-    text: "Galaxy Adventure",
-    action: "Start",
-    link: "/shooter",
+    category: "Arcade",
     image: "/Galaxy.png",
+    link: "/shooter",
   },
   {
-    icon: CircleDollarSignIcon,
-    text: "Plinko",
-    action: "Start",
-    link: "/plinko",
+    name: "Plinko",
+    icon: CircleDollarSign,
+    category: "Arcade",
     image: "/Plinko.png",
+    link: "/plinko",
   },
 ];
 
-interface GameItemsProps extends Game {
-  className?: string;
-}
+const GameCard: React.FC<Game> = ({
+  name,
+  icon: Icon,
+  category,
+  image,
+  link,
+}) => (
+  <Card className="flex flex-col bg-transparent border z-0 border-bgdark w-64 h-48 relative">
+    <CardContent className="p-0 h-full">
+      <div className="relative w-full h-full rounded-lg overflow-hidden">
+        <Image
+          className="object-cover w-full h-full rounded-lg"
+          src={image}
+          alt={name}
+          layout="fill"
+          objectFit="cover"
+        />
 
-const GameItems: React.FC<GameItemsProps> = React.memo(
-  ({ icon: Icon, text, link, className, image }) => {
-    return (
-      <Card className={`bg-gray-800 border-gray-700 w-72 ${className}`}>
-        <CardContent className="px-0">
-          <div className="relative w-full h-32 mb-4">
-            <Image
-              src={image}
-              alt={text}
-              layout="fill"
-              objectFit="cover"
-              className="rounded"
-            />
+        <div className="absolute bottom-0 left-0 right-0 z-10 bg-panel p-4 flex justify-between items-center rounded-b-lg">
+          <Icon className="text-purple-500 w-6 h-6" />
+          <div className="-ml-4">
+            <h3 className="text-white text-sm font-normal">{name}</h3>
+            <p className="text-gray-400 text-xs">{category}</p>
           </div>
-          <div className="flex items-center justify-between px-2">
-            <div className="flex items-center space-x-4">
-              <div className="bg-gray-700 p-2 rounded-full">
-                <Icon className="text-purple-500 w-6 h-6" />
-              </div>
-              <div>
-                <p className="text-white text-base font-semibold">{text}</p>
-                <p className="text-gray-400 text-sm">Arcade</p>
-              </div>
-            </div>
-            <Link href={link} passHref>
-              <Button className="bg-orange-500 text-white hover:bg-orange-600 p-2 rounded-full">
-                &rarr;
-              </Button>
-            </Link>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  },
+          <Link href={link} passHref>
+            <button className="bg-orange-600 rounded-md p-2">
+              <ChevronRight className="w-5 h-5 text-black" />
+            </button>
+          </Link>
+        </div>
+      </div>
+    </CardContent>
+  </Card>
 );
 
-export const GamesComponent: React.FC = () => {
+export const GamesComponent = () => {
   return (
-    <div className="overflow-hidden text-white py-8">
-      <Carousel className="w-full h-full">
-        <CarouselContent>
-          {Games.map((game, index) => (
-            <CarouselItem
-              key={index}
-              className="pl-2 md:pl-4 basis-4/5 md:basis-1/2"
-            >
-              <GameItems key={index} {...game} />
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-      </Carousel>
-    </div>
+    <Carousel className="w-full">
+      <CarouselContent className="pl-6">
+        {Games.map((game, index) => (
+          <CarouselItem
+            key={index}
+            className="px-6 max-w-[65%] basis-[85%] md:basis-[85%]"
+          >
+            <GameCard {...game} />
+          </CarouselItem>
+        ))}
+      </CarouselContent>
+      <div className="flex justify-center mt-4">
+        {Games.map((_, index) => (
+          <div
+            key={index}
+            className={`w-1.5 h-1.5 rounded-full mx-1 ${
+              index === 0 ? "bg-white" : "bg-gray-600"
+            }`}
+          />
+        ))}
+      </div>
+    </Carousel>
   );
 };

@@ -20,6 +20,8 @@ const config = {
     extend: {
       colors: {
         customdark: "#08050F",
+        bgdark: "#001633",
+        panel: "#02080E",
         Home: "#699BF7",
         Earn: "#FFD233",
         Shop: "#4ECB71",
