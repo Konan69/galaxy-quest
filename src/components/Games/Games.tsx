@@ -16,6 +16,7 @@ interface Game {
   link: string;
   image: string;
 }
+
 const Games: Game[] = [
   {
     name: "Galaxy Adventures",
@@ -70,14 +71,14 @@ const GameCard: React.FC<Game> = ({
 
 export const GamesComponent = () => {
   return (
-    <Carousel className="w-full">
-      <CarouselContent className="pl-6">
+    <Carousel className="relative w-full">
+      <CarouselContent className="flex flex-row snap-center scroll-snap-x scroll-smooth pl-8 mr-8">
         {Games.map((game, index) => (
           <CarouselItem
             key={index}
-            className="px-6 max-w-[65%] basis-[85%] md:basis-[85%]"
+            className="snap-center basis-[75%]  w-[85%]"
           >
-            <GameCard {...game} />
+            <GameCard {...game} key={index} />
           </CarouselItem>
         ))}
       </CarouselContent>

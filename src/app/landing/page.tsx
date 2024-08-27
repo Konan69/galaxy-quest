@@ -105,10 +105,7 @@ export default function LandingClient() {
           <Carousel className="w-full">
             <CarouselContent className="-ml-2 md:-ml-4 gap-x-2">
               {Array.from({ length: 5 }).map((_, index) => (
-                <CarouselItem
-                  key={index}
-                  className="pl-2 md:pl-4 basis-4/5 md:basis-1/2"
-                >
+                <CarouselItem key={index} className="pl-2 md:pl-4 md:basis-1/2">
                   <Card className="bg-[#02080E] rounded-xl border-transparent">
                     <CardContent className="flex aspect-square items-center justify-center p-6">
                       <span className="text-3xl text-white font-semibold">
