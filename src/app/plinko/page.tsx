@@ -28,7 +28,7 @@ export default function Game() {
   >([]);
   const [isUpdating, setIsUpdating] = useState(false);
 
-  const { mutate, data: response } = useAddBallMutation();
+  const { mutateAsync, data: response } = useAddBallMutation();
 
   const balance = user?.points;
 
@@ -106,7 +106,7 @@ export default function Game() {
       return;
     }
     try {
-      mutate({
+      mutateAsync({
         riskLevel: selectedOption,
         betAmount: betAmount,
       });
