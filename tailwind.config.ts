@@ -22,6 +22,7 @@ const config = {
         customdark: "#08050F",
         bgdark: "#001633",
         panel: "#02080E",
+        tasks: "#091323",
         Home: "#699BF7",
         Earn: "#FFD233",
         Shop: "#4ECB71",

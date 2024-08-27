@@ -8,6 +8,8 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
+import Ion from "../Icons/IonRocket";
+import Coin from "../Icons/Coin";
 
 interface Game {
   icon: React.ElementType;
@@ -20,14 +22,14 @@ interface Game {
 const Games: Game[] = [
   {
     name: "Galaxy Adventures",
-    icon: Rocket,
+    icon: Ion,
     category: "Arcade",
     image: "/Galaxy.png",
     link: "/shooter",
   },
   {
     name: "Plinko",
-    icon: CircleDollarSign,
+    icon: Coin,
     category: "Arcade",
     image: "/Plinko.png",
     link: "/plinko",
@@ -52,17 +54,19 @@ const GameCard: React.FC<Game> = ({
           objectFit="cover"
         />
 
-        <div className="absolute bottom-0 left-0 right-0 z-10 bg-panel p-4 flex justify-between items-center rounded-b-lg">
+        <div className="absolute bottom-0 left-0 right-0 z-10 bg-panel p-4 flex items-center rounded-b-lg">
           <Icon className="text-purple-500 w-6 h-6" />
-          <div className="-ml-4">
+          <div className="ml-4">
             <h3 className="text-white text-sm font-normal">{name}</h3>
             <p className="text-gray-400 text-xs">{category}</p>
           </div>
-          <Link href={link} passHref>
-            <button className="bg-orange-600 rounded-md p-2">
-              <ChevronRight className="w-5 h-5 text-black" />
-            </button>
-          </Link>
+          <div className="flex grow justify-end">
+            <Link href={link} passHref>
+              <button className="bg-orange-600 rounded-md p-2 ">
+                <ChevronRight className="w-5 h-5 text-black" />
+              </button>
+            </Link>
+          </div>
         </div>
       </div>
     </CardContent>

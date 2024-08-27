@@ -86,9 +86,7 @@ const TaskItem = ({
   completed?: boolean;
   isWalletTask?: boolean;
 }) => (
-  <Card
-    className={`mb-2 ${completed ? "bg-gray-700" : "bg-gray-800"} border-gray-700`}
-  >
+  <Card className={`mb-2 ${completed ? "bg-tasks" : "bg-tasks"} border-bgdark`}>
     <CardContent className="p-4 flex items-center justify-between">
       <div className="flex items-center space-x-4">
         <div
