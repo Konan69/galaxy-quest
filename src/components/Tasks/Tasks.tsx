@@ -205,19 +205,17 @@ const TasksComponent = () => {
 
   const sendTx = async (task: any) => {
     try {
-      const transaction: SendTransactionRequest = {
+      console.log("account", TonConnectUI.account);
+      const transaction = {
         validUntil: Math.floor(Date.now() / 1000) + 6000,
         messages: [
           {
             address:
               "0:d0c3c16412df042e1d2e2c6d6f210496354db04568be29531732e97b421b54c6",
             amount: "100000000",
-            payload: "transaction",
-            stateInit: "",
           },
         ],
       };
-      console.log("account", TonConnectUI.account);
 
       const result = await TonConnectUI.sendTransaction(transaction);
       if (result.boc) {
@@ -287,12 +285,6 @@ const TasksComponent = () => {
             },
             onError: () => {
               walletUpdated.current = false;
-              toast({
-                variant: "destructive",
-                title: "Failed to update wallet",
-                description:
-                  "There was an error updating your wallet. Please try again.",
-              });
             },
           },
         );
