@@ -5,8 +5,6 @@ import { useGetUserQuery, useRegisterUserMutation } from "@/lib/queries";
 import { useInitData } from "@telegram-apps/sdk-react";
 import { useTelegramId } from "@/components/Store/userStore";
 import { useGetUser } from "@/hooks/useCache";
-
-import { Progress } from "@/components/ui/progress";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar } from "@/components/ui/avatar";
 import {
@@ -19,14 +17,17 @@ import Image from "next/image";
 import { getRank, Rank, rankThreshold } from "@/lib/rank";
 import Ion from "@/components/Icons/IonRocket";
 
-import { TonConnectButton } from "@tonconnect/ui-react";
+import { TonConnectButton, useTonWallet } from "@tonconnect/ui-react";
 import { Copy } from "lucide-react";
+import { toast } from "@/components/ui/use-toast";
+import { Toaster } from "@/components/ui/toaster";
 
 export default function LandingClient() {
   const initData = useInitData();
   const username = initData?.user?.username;
   const inv_code = initData?.startParam;
   const user = useGetUser();
+  const wallet = useTonWallet();
 
   useGetUserQuery(username!);
 
@@ -48,6 +49,15 @@ export default function LandingClient() {
         />
       </div>
     );
+  };
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText("copied to clipboard");
+    toast({
+      variant: "default",
+      title: "Copied to clipboard",
+      description: "Your username has been copied to clipboard",
+    });
   };
 
   useEffect(() => {
@@ -72,7 +82,7 @@ export default function LandingClient() {
   return (
     <div className="min-h-screen min-w-full text-white p-2 overflow-y-auto pb-16 font-inter">
       <div className="flex justify-center pt-10 pb-6">
-        <TonConnectButton />
+        {wallet ? <TonConnectButton /> : <div className="mt-4"></div>}
       </div>
       <div className=" mx-auto space-y-4">
         <div className="flex flex-col items-center space-y-2 ">
@@ -89,7 +99,7 @@ export default function LandingClient() {
 
           <h2 className="text-xl font-bold flex flex-row pb-6 pt-4">
             {user?.username.toUpperCase()}
-            <button className="ml-2 pl-1 text-white">
+            <button onClick={copyToClipboard} className="ml-2 pl-1 text-white">
               <Copy />
             </button>
           </h2>
@@ -145,6 +155,7 @@ export default function LandingClient() {
           </Carousel>
         </div>
       </div>
+      <Toaster />
     </div>
   );
 }
