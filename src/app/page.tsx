@@ -16,9 +16,11 @@ import {
 } from "@/components/ui/carousel";
 
 import Image from "next/image";
+import { getRank, Rank, rankThreshold } from "@/lib/rank";
+import Ion from "@/components/Icons/IonRocket";
 
 import { TonConnectButton } from "@tonconnect/ui-react";
-import { Copy, RocketIcon } from "lucide-react";
+import { Copy } from "lucide-react";
 
 export default function LandingClient() {
   const initData = useInitData();
@@ -30,6 +32,23 @@ export default function LandingClient() {
 
   const { setTelegramId } = useTelegramId();
   const createUserMutation = useRegisterUserMutation();
+  const progress =
+    (user?.points! / rankThreshold(getRank(user?.points as number))) * 100;
+
+  const GradientProgressBar = ({ value }: { value: number }) => {
+    return (
+      <div className="w-full bg-white rounded-full h-4 overflow-hidden p-[1px]">
+        <div
+          className="h-full rounded-xl"
+          style={{
+            width: `${value}%`,
+            background:
+              "linear-gradient(to right, #020913, #092651, #0B2F64, #0D3979)",
+          }}
+        />
+      </div>
+    );
+  };
 
   useEffect(() => {
     if (!user && username) {
@@ -82,21 +101,18 @@ export default function LandingClient() {
           </div>
           <Card className="bg-[#02080E] rounded-xl border-[1.5px] border-white m-4">
             <CardContent className="p-4">
-              <div className="text-lg font-sans mb-2 text-white">Cadet</div>
+              <div className="text-lg font-sans mb-2 text-white">
+                {getRank(user?.points as number)}
+              </div>
               <div className="flex items-center space-x-2">
                 <div className="flex-grow min-w-64">
-                  <Progress
-                    value={60}
-                    style={{
-                      background:
-                        "linear-gradient(to right, #020913, #092651, #0B2F64, #0D3979)",
-                    }}
-                  />
+                  <GradientProgressBar value={progress} />
                   <div className="text-right text-lg pt-1 text-white mt-1">
-                    {user?.points}/150
+                    {user?.points}/
+                    {rankThreshold(getRank(user?.points as number))}
                   </div>
                 </div>
-                <RocketIcon className="w-6 h-6 text-white " />
+                <Ion className="w-6 h-6 text-white " />
               </div>
             </CardContent>
           </Card>

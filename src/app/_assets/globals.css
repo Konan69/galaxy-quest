@@ -85,9 +85,14 @@ body {
     display: none; /* Hide the SVG element */
   }
 }
-
-.card {
-  padding: 2em;
+:root {
+  --progress-background: linear-gradient(
+    to right,
+    #020913,
+    #092651,
+    #0b2f64,
+    #0d3979
+  );
 }
 
 .stack-container {
@@ -104,6 +109,9 @@ body {
   list-style-type: none;
   padding: 0;
   margin: 0;
+}
+.h-full.w-full.flex-1.bg-primary.transition-all {
+  border-radius: 7.5px;
 }
 
 .stack-item {

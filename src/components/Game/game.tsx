@@ -22,9 +22,9 @@ import { useUserStore } from "@/components/Store/userStore";
 import { useAddPointsMutation } from "@/lib/queries";
 
 // Constants for game dimensions and element sizes
-const GAME_HEIGHT = 500;
-const GAME_WIDTH = 300;
-const SHIP_SIZE = 40;
+const GAME_HEIGHT = 600;
+const GAME_WIDTH = 400;
+const SHIP_SIZE = 60;
 const OBSTACLE_SIZE = 60;
 const PROJECTILE_SIZE = 5;
 const POWERUP_SIZE = 30;
@@ -34,10 +34,11 @@ const INITIAL_OBSTACLE_SPEED = 3;
 const INITIAL_SPAWN_INTERVAL = 1500;
 const MAX_DIFFICULTY_FACTOR = 10;
 const DIFFICULTY_INCREASE_INTERVAL = 5000; // 5 seconds
+const BASE_PROJECTILE_SPEED = 15;
 
 // Constants for powerups
 const POWERUP_DURATION = 10000; // 10 seconds
-const POWERUP_SPAWN_CHANCE = 0.2; // 20% chance to spawn a powerup when an obstacle is destroyed
+const POWERUP_SPAWN_CHANCE = 0.2;
 
 // Interfaces for game objects
 interface Obstacle {
@@ -158,20 +159,33 @@ const Game: React.FC = () => {
     }
   }, [user, addPointsMutation]);
 
-  // Function to spawn a powerup
   const spawnPowerup = useCallback((x: number, y: number) => {
-    if (Math.random() < POWERUP_SPAWN_CHANCE) {
+    const random = Math.random();
+
+    if (random < POWERUP_SPAWN_CHANCE) {
+      // 20% chance to spawn one of the first three power-ups
       const powerupTypes: Powerup["type"][] = [
         "rapidFire",
         "shield",
         "doublePoints",
-        "extraLife",
       ];
       const newPowerup: Powerup = {
         x,
         y,
         id: Date.now(),
         type: powerupTypes[Math.floor(Math.random() * powerupTypes.length)],
+      };
+      setPowerups((prev) => [...prev, newPowerup]);
+    } else if (
+      random < POWERUP_SPAWN_CHANCE + 0.025 &&
+      random >= POWERUP_SPAWN_CHANCE
+    ) {
+      // 10% chance to spawn extra life
+      const newPowerup: Powerup = {
+        x,
+        y,
+        id: Date.now(),
+        type: "extraLife",
       };
       setPowerups((prev) => [...prev, newPowerup]);
     }
@@ -241,7 +255,11 @@ const Game: React.FC = () => {
 
     setProjectiles((prev) =>
       prev
-        .map((proj) => ({ ...proj, y: proj.y - 5 }))
+        .map((proj) => ({
+          ...proj,
+          ...proj,
+          y: proj.y - BASE_PROJECTILE_SPEED * difficultyFactor * 0.5,
+        }))
         .filter((proj) => proj.y > 0 && proj.health > 0),
     );
 
@@ -399,7 +417,7 @@ const Game: React.FC = () => {
       </div>
       <div
         ref={gameAreaRef}
-        className="relative bg-black border-4 border-purple-500 overflow-hidden touch-none"
+        className="relative border-4 border-purple-600 overflow-hidden touch-none"
         style={{ width: GAME_WIDTH, height: GAME_HEIGHT }}
         onPointerMove={handlePointerMove}
         onPointerDown={handlePointerDown}
