@@ -206,12 +206,12 @@ const TasksComponent = () => {
   const sendTx = async (task: any) => {
     try {
       const transaction: SendTransactionRequest = {
-        validUntil: 1000 * 60 * 10,
+        validUntil: Math.floor(Date.now() / 1000) + 6000,
         messages: [
           {
             address: "UQDQw8FkEt8ELh0uLG1vIQSWNU2wRWi-KVMXMul7QhtUxtKL",
-            amount: "0.01",
-            payload: "",
+            amount: "100000000",
+            payload: "transaction",
             stateInit: "",
           },
         ],
