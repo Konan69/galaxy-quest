@@ -18,7 +18,7 @@ import {
   useUpdateTaskMutation,
 } from "@/lib/queries";
 import { Toaster } from "@/components/ui/toaster";
-import { useToast } from "../ui/use-toast";
+import { useToast } from "./ui/use-toast";
 import {
   Collapsible,
   CollapsibleContent,
@@ -31,8 +31,8 @@ import {
   useTonConnectUI,
 } from "@tonconnect/ui-react";
 
-import X from "../Icons/X";
-import Ton from "../Icons/Ton";
+import X from "./Icons/X";
+import Ton from "./Icons/Ton";
 
 const tasks = [
   {
@@ -60,7 +60,7 @@ const tasks = [
   {
     id: "Invite5",
     icon: Users,
-    text: "Invite 5 friends to Galaxy Quest",
+    text: "Invite 5 friends to PUGS",
     reward: 10000,
     action: "Start",
   },
@@ -101,7 +101,7 @@ const TaskItem = ({
     <CardContent className="p-4 flex items-center justify-between">
       <div className="flex items-center space-x-4">
         <div
-          className={`p-2 rounded-full ${completed ? "bg-green-700" : "bg-gray-700"}`}
+          className={`p-2 rounded-full ${completed ? "bg-green-700" : "bg-tasks"}`}
         >
           <Icon
             className={`w-6 h-6 ${completed ? "text-green-300" : "text-white"}`}

@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import TasksComponent from "@/components/Tasks/Tasks";
+import TasksComponent from "@/components/Tasks";
 import { GamesComponent } from "@/components/Games/Games";
 
 const EarnPage = () => {
