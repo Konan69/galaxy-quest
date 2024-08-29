@@ -37,7 +37,7 @@ export default function LandingClient() {
 
   const GradientProgressBar = ({ value }: { value: number }) => {
     return (
-      <div className="w-full bg-white rounded-full h-4 overflow-hidden p-[1px]">
+      <div className="w-full bg-white rounded-full h-3 overflow-hidden p-[1px]">
         <div
           className="h-full rounded-xl"
           style={{
@@ -99,20 +99,26 @@ export default function LandingClient() {
           <div className="absolute -top-3 left-10 text-m bg-[#02080E] px-2">
             Points
           </div>
-          <Card className="bg-[#02080E] rounded-xl border-[1.5px] border-white m-4">
-            <CardContent className="p-4">
-              <div className="text-lg font-sans mb-2 text-white">
-                {getRank(user?.points as number)}
-              </div>
-              <div className="flex items-center space-x-2">
-                <div className="flex-grow min-w-64">
-                  <GradientProgressBar value={progress} />
-                  <div className="text-right text-lg pt-1 text-white mt-1">
-                    {user?.points}/
-                    {rankThreshold(getRank(user?.points as number))}
+          <Card className="bg-[#02080E] rounded-xl border-[1.5px] border-white m-4 py-2">
+            <CardContent className="px-4 py-1 flex flex-row">
+              <div className="flex flex-col w-[70%] ">
+                <div className="text-lg font-sans text-white mb-2">
+                  {getRank(user?.points as number)}
+                </div>
+                <div className="flex items-center ">
+                  <div className="flex-grow min-w-32 ">
+                    <div className="flex items-center justify-center">
+                      <GradientProgressBar value={progress} />
+                    </div>
+                    <div className=" text-base text-white flex justify-end mt-2">
+                      {user?.points}/
+                      {rankThreshold(getRank(user?.points as number))}
+                    </div>
                   </div>
                 </div>
-                <Ion className="w-6 h-6 text-white " />
+              </div>
+              <div className=" flex items-center justify-end ml-12">
+                <Ion size={42} />
               </div>
             </CardContent>
           </Card>
