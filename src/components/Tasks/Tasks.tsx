@@ -217,6 +217,7 @@ const TasksComponent = () => {
           },
         ],
       };
+      console.log("account", TonConnectUI.account);
 
       const result = await TonConnectUI.sendTransaction(transaction);
       if (result.boc) {
