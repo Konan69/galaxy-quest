@@ -40,19 +40,19 @@ const tasks = [
     icon: SparklesIcon,
     text: "Early Reward",
     reward: 2000,
-    action: "Start",
+    action: "Claim",
   },
   {
     id: "FollowX",
     icon: X,
-    text: "Follow Galaxy Quest on X",
+    text: "Follow PUGS on X",
     reward: 3000,
     action: "Start",
   },
   {
     id: "SubTgram",
     icon: Send,
-    text: "Subscribe to Galaxy Quest channel",
+    text: "Subscribe to PUGS channel",
     reward: 2000,
     action: "Start",
   },
@@ -97,20 +97,22 @@ const TaskItem = ({
   completed?: boolean;
   isWalletTask?: boolean;
 }) => (
-  <Card className={`mb-2 ${completed ? "bg-tasks" : "bg-tasks"} border-bgdark`}>
+  <Card className={`mb-5 ${completed ? "bg-tasks" : "bg-tasks"} border-bgdark`}>
     <CardContent className="p-4 flex items-center justify-between">
       <div className="flex items-center space-x-4">
         <div
           className={`p-2 rounded-full ${completed ? "bg-green-700" : "bg-gray-700"}`}
         >
           <Icon
-            className={`w-6 h-6 ${completed ? "text-green-300" : "text-purple-500"}`}
+            className={`w-6 h-6 ${completed ? "text-green-300" : "text-white"}`}
           />
         </div>
         <div>
-          <p className="text-white text-base font-semibold">{text}</p>
-          <p className={`${completed ? "text-green-300" : "text-purple-500"}`}>
-            +{reward} Points
+          <p className="text-white text-m font-semibold">{text}</p>
+          <p
+            className={` text-xs ${completed ? "text-green-300" : "text-slate-200"}`}
+          >
+            +{reward} PUGS
           </p>
         </div>
       </div>
@@ -123,7 +125,7 @@ const TaskItem = ({
             className={
               action === "Check"
                 ? "bg-transparent text-white border-purple-500 hover:bg-purple-500 hover:text-white"
-                : "bg-purple-500 text-white hover:bg-purple-600"
+                : "bg-purple-500 text-black hover:bg-purple-600"
             }
             onClick={onAction}
           >
@@ -302,15 +304,17 @@ const TasksComponent = () => {
     <div className="h-full overflow-y-auto text-slate-100 p-8 pb-16">
       <div className="mb-8">
         <h2 className="text-xl font-semibold mb-4">Tasks</h2>
-        {pendingTasks.map((task, index) => (
-          <TaskItem
-            key={index}
-            {...task}
-            onAction={() => handleTaskAction(task)}
-            completed={false}
-            isWalletTask={task.id === "ConnectWallet"}
-          />
-        ))}
+        <div className="bg-taskbg bg-opacity-70 p-3 px-5 rounded-xl ">
+          {pendingTasks.map((task, index) => (
+            <TaskItem
+              key={index}
+              {...task}
+              onAction={() => handleTaskAction(task)}
+              completed={false}
+              isWalletTask={task.id === "ConnectWallet"}
+            />
+          ))}
+        </div>
       </div>
       <Collapsible
         open={isOpen}

@@ -74,11 +74,11 @@ body {
 
 @layer components {
   button[data-tc-connect-button="true"] {
-    @apply bg-purple-500 hover:bg-purple-600 w-24 rounded-lg px-4 py-2 text-white font-bold border-none cursor-pointer;
+    @apply bg-orange-500 hover:bg-orange-400 w-[4rem] rounded-lg px-2 py-2 font-bold border-none cursor-pointer;
   }
 
   button[data-tc-connect-button="true"] .go1487791704 {
-    visibility: hidden; /* Hide the original text */
+    visibility: hidden;
   }
 
   button[data-tc-connect-button="true"] svg {
@@ -93,6 +93,13 @@ body {
     #0b2f64,
     #0d3979
   );
+  .go1487791704 {
+    color: black;
+    font-size: 12px;
+  }
+  .go3974562317 .go4218612181 {
+    width: 4rem;
+  }
 }
 
 .stack-container {
