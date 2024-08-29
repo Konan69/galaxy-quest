@@ -221,6 +221,7 @@ const TasksComponent = () => {
       if (result.boc) {
         taskUpdater(task);
       } else {
+        console.log(result);
         toast({
           variant: "destructive",
           title: "Error sending transaction",
@@ -229,6 +230,7 @@ const TasksComponent = () => {
         });
       }
     } catch (error) {
+      console.log(error);
       toast({
         variant: "destructive",
         title: "Error sending transaction",
