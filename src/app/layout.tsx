@@ -7,7 +7,6 @@ import QueryClientProvider from "@/lib/QueryClientProvider";
 import "@telegram-apps/telegram-ui/dist/styles.css";
 import "normalize.css/normalize.css";
 import "./_assets/globals.css";
-import bg from "../../public/bg.png";
 import Navbar from "@/components/NavBar/Navbar";
 
 export const metadata: Metadata = {

@@ -8,7 +8,7 @@ import { useGetUser } from "@/hooks/useCache";
 
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar } from "@/components/ui/avatar";
 import {
   Carousel,
   CarouselContent,

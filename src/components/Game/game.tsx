@@ -35,7 +35,7 @@ const MAX_DIFFICULTY_FACTOR = 10;
 const DIFFICULTY_INCREASE_INTERVAL = 5000; // 5 seconds
 
 // Constants for powerups
-const POWERUP_DURATION = 1000; // 10 seconds
+const POWERUP_DURATION = 10000; // 10 seconds
 const POWERUP_SPAWN_CHANCE = 0.2; // 20% chance to spawn a powerup when an obstacle is destroyed
 
 // Interfaces for game objects
@@ -361,7 +361,7 @@ const Game: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white p-4">
+    <div className="flex flex-col items-center justify-center min-h-screen text-white p-4">
       <div className="flex flex-row items-center justify-start w-full pl-8">
         <div className="text-left">
           Difficulty: {difficultyFactor.toFixed(1)}x
@@ -481,7 +481,7 @@ const Game: React.FC = () => {
               <AlertDialogAction className="mr-2 w-22" onClick={startGame}>
                 {gameOver ? "Play Again" : "Start Game"}
               </AlertDialogAction>
-              <Link href="/landing" className="w-20">
+              <Link href="/" className="w-20">
                 <AlertDialogAction>Exit</AlertDialogAction>
               </Link>
             </div>

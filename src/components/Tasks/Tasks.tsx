@@ -29,7 +29,6 @@ import {
   useTonAddress,
   useTonWallet,
   useTonConnectUI,
-  SendTransactionRequest,
 } from "@tonconnect/ui-react";
 
 import X from "../Icons/X";
@@ -46,7 +45,7 @@ const tasks = [
   {
     id: "FollowX",
     icon: X,
-    text: "Follow Galaxy Quest on Twitter",
+    text: "Follow Galaxy Quest on X",
     reward: 3000,
     action: "Start",
   },
@@ -144,7 +143,7 @@ const TasksComponent = () => {
   const user = useGetUser();
   const { telegramId } = useTelegramId();
   const [isOpen, setIsOpen] = React.useState(false);
-  const [checkMembership, setCheckMembership] = useState(false);
+
   const membershipCheck = useMembershipCheck({
     userId: telegramId!,
     groupId: demoGroup,
@@ -300,9 +299,9 @@ const TasksComponent = () => {
   );
 
   return (
-    <div className="h-full overflow-y-auto text-white p-8 pb-16">
+    <div className="h-full overflow-y-auto text-slate-100 p-8 pb-16">
       <div className="mb-8">
-        <h2 className="text-xl font-bold mb-4">Tasks</h2>
+        <h2 className="text-xl font-semibold mb-4">Tasks</h2>
         {pendingTasks.map((task, index) => (
           <TaskItem
             key={index}
