@@ -6,6 +6,7 @@ import asteroid from "../../app/_assets/Sprites/asteroid.png";
 import ship from "../../app/_assets/Sprites/ship.png";
 import lazer from "../../app/_assets/Sprites/lazer.png";
 import rapidFireIcon from "../../app/_assets/Sprites/rapidfire.png";
+import Lives from "../../app/_assets/Sprites/Lives.png";
 import shieldIcon from "../../app/_assets/Sprites/shield.png";
 import doublePointsIcon from "../../app/_assets/Sprites/doublepoints.png";
 import {
@@ -63,7 +64,7 @@ interface Powerup {
   x: number;
   y: number;
   id: number;
-  type: "rapidFire" | "shield" | "doublePoints";
+  type: "rapidFire" | "shield" | "doublePoints" | "extraLife";
 }
 
 const Game: React.FC = () => {
@@ -94,6 +95,7 @@ const Game: React.FC = () => {
   const rapidFireRef = useRef(false);
   const shieldRef = useRef(false);
   const doublePointsRef = useRef(false);
+  const extraLifeRef = useRef(false);
 
   // Update scoreRef whenever score changes
   useEffect(() => {
@@ -141,6 +143,7 @@ const Game: React.FC = () => {
     rapidFireRef.current = false;
     shieldRef.current = false;
     doublePointsRef.current = false;
+    extraLifeRef.current = false;
   }, []);
 
   const endGame = useCallback(() => {
@@ -162,6 +165,7 @@ const Game: React.FC = () => {
         "rapidFire",
         "shield",
         "doublePoints",
+        "extraLife",
       ];
       const newPowerup: Powerup = {
         x,
@@ -193,6 +197,9 @@ const Game: React.FC = () => {
         setTimeout(() => {
           doublePointsRef.current = false;
         }, POWERUP_DURATION);
+        break;
+      case "extraLife":
+        setLives((prev) => Math.min(prev + 1, 5));
         break;
     }
   }, []);
@@ -362,9 +369,32 @@ const Game: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen text-white p-4">
-      <div className="flex flex-row items-center justify-start w-full pl-8">
+      <div className="flex flex-row items-center w-full justify-between pl-10">
         <div className="text-left">
           Difficulty: {difficultyFactor.toFixed(1)}x
+        </div>
+        <div className="flex flex-row items-center justify-end pr-12 gap-x-2">
+          <Image
+            src={rapidFireIcon}
+            width={30}
+            height={30}
+            alt="Rapid Fire"
+            className={rapidFireRef.current ? "" : "grayscale"}
+          />
+          <Image
+            src={shieldIcon}
+            width={24}
+            height={24}
+            alt="Shield"
+            className={shieldRef.current ? "" : "grayscale"}
+          />
+          <Image
+            src={doublePointsIcon}
+            width={28}
+            height={28}
+            alt="Double Points"
+            className={doublePointsRef.current ? "" : "grayscale"}
+          />
         </div>
       </div>
       <div
@@ -441,7 +471,9 @@ const Game: React.FC = () => {
                 ? rapidFireIcon
                 : powerup.type === "shield"
                   ? shieldIcon
-                  : doublePointsIcon
+                  : powerup.type === "extraLife"
+                    ? Lives
+                    : doublePointsIcon
             }
             alt={powerup.type}
             className="absolute"
@@ -454,16 +486,21 @@ const Game: React.FC = () => {
           />
         ))}
       </div>
-      <div className="mt-4">
-        Score: {score} | Lives: {lives}
+      <div className="mt-4 flex ">
+        Score: {score} |
+        {lives &&
+          Array.from({ length: lives }).map((_, i) => (
+            <Image
+              key={i}
+              src={Lives}
+              alt="Lives"
+              width={30}
+              height={30}
+              className=" -mx-1"
+            />
+          ))}
       </div>
-      <div className="mt-2">
-        {rapidFireRef.current && (
-          <span className="mr-2">Rapid Fire Active</span>
-        )}
-        {shieldRef.current && <span className="mr-2">Shield Active</span>}
-        {doublePointsRef.current && <span>Double Points Active</span>}
-      </div>
+
       <AlertDialog open={!gameStarted || gameOver}>
         <AlertDialogContent>
           <AlertDialogHeader>
