@@ -156,7 +156,7 @@ export default function Game() {
         />
         <div className="flex justify-center"></div>
 
-        <Button1 className="px-10 mb-4" onClick={handleAddBall}>
+        <Button1 className="px-2 mb-4" onClick={handleAddBall}>
           Add ball
         </Button1>
 

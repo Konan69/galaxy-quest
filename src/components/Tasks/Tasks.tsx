@@ -28,8 +28,13 @@ import {
   TonConnectButton,
   useTonAddress,
   useTonWallet,
+  useTonConnectUI,
+  SendTransactionRequest,
 } from "@tonconnect/ui-react";
+
 import X from "../Icons/X";
+import Ton from "../Icons/Ton";
+
 const tasks = [
   {
     id: "EarlyReward",
@@ -67,6 +72,13 @@ const tasks = [
     reward: 1000,
     action: "Connect",
   },
+  {
+    id: "TX",
+    icon: Ton,
+    text: "Make a Ton Transaction",
+    reward: 10000,
+    action: "Start",
+  },
 ];
 
 const TaskItem = ({
@@ -79,7 +91,7 @@ const TaskItem = ({
   isWalletTask = false,
 }: {
   icon: any;
-  text: string;
+  text: string | any;
   reward: number;
   action: string;
   onAction: () => void;
@@ -142,6 +154,8 @@ const TasksComponent = () => {
   const address = useTonAddress();
   const walletUpdated = useRef(false);
 
+  const [TonConnectUI, setOptions] = useTonConnectUI();
+
   const taskUpdater = (task: any) => {
     updateTask.mutate(
       {
@@ -189,6 +203,41 @@ const TasksComponent = () => {
     }
   };
 
+  const sendTx = async (task: any) => {
+    try {
+      const transaction: SendTransactionRequest = {
+        validUntil: Date.now() + 1000 * 60 * 10,
+        messages: [
+          {
+            address: "UQDQw8FkEt8ELh0uLG1vIQSWNU2wRWi-KVMXMul7QhtUxtKL",
+            amount: "0.01",
+            payload: "",
+            stateInit: "",
+          },
+        ],
+      };
+
+      const result = await TonConnectUI.sendTransaction(transaction);
+      if (result.boc) {
+        taskUpdater(task);
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Error sending transaction",
+          description:
+            "There was an error sending the transaction. Please try again.",
+        });
+      }
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error sending transaction",
+        description:
+          "There was an error sending the transaction. Please try again.",
+      });
+    }
+  };
+
   const handleTaskAction = (task: any) => {
     if (task.id === "FollowX") {
       window.open(
@@ -210,6 +259,9 @@ const TasksComponent = () => {
     }
     if (task.id === "SubTgram") {
       checkMember(task);
+    }
+    if (task.id === "TX") {
+      sendTx(task);
     }
   };
 
