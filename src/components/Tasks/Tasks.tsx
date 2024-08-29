@@ -209,7 +209,8 @@ const TasksComponent = () => {
         validUntil: Math.floor(Date.now() / 1000) + 6000,
         messages: [
           {
-            address: "UQDQw8FkEt8ELh0uLG1vIQSWNU2wRWi-KVMXMul7QhtUxtKL",
+            address:
+              "0:d0c3c16412df042e1d2e2c6d6f210496354db04568be29531732e97b421b54c6",
             amount: "100000000",
             payload: "transaction",
             stateInit: "",
