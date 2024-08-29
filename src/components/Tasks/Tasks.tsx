@@ -206,7 +206,7 @@ const TasksComponent = () => {
   const sendTx = async (task: any) => {
     try {
       const transaction: SendTransactionRequest = {
-        validUntil: Date.now() + 1000 * 60 * 10,
+        validUntil: 1000 * 60 * 10,
         messages: [
           {
             address: "UQDQw8FkEt8ELh0uLG1vIQSWNU2wRWi-KVMXMul7QhtUxtKL",
