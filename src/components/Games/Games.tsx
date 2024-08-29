@@ -80,7 +80,7 @@ const GameCard: React.FC<Game> = ({
 export const GamesComponent = () => {
   return (
     <Carousel className="w-full ">
-      <CarouselContent className=" flex mx-8 gap-x-2">
+      <CarouselContent className=" flex mx-2 gap-x-2">
         {Games.map((game, index) => (
           <CarouselItem key={index} className=" basis-auto ">
             <GameCard {...game} key={index} />
