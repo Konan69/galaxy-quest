@@ -19,8 +19,10 @@ export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="en">
       <body
-        className="min-h-screen min-w-full bg-contain bg-center bg-repeat-y sm:bg-contain md:bg-cover lg:bg-fixed"
-        style={{ backgroundImage: "url(/bg.png)" }}
+        className="min-h-screen min-w-full bg-cover bg-repeat-x bg-left-top sm:bg-contain md:bg-cover lg:bg-fixed"
+        style={{
+          backgroundImage: "url(/bg.png)",
+        }}
       >
         <QueryClientProvider>
           <div className="relative min-h-screen pb-16">

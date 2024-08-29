@@ -45,7 +45,7 @@ export default function Navbar() {
   const pathname = usePathname();
 
   const navItems = [
-    { href: "/landing", icon: Home, label: "Home" },
+    { href: "/", icon: Home, label: "Home" },
     { href: "/earn", icon: Earn, label: "Earn" },
     { href: "/shop", icon: Shop, label: "Shop" },
     {
