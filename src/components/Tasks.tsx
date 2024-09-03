@@ -124,8 +124,8 @@ const TaskItem = ({
             variant={action === "Check" ? "outline" : "default"}
             className={
               action === "Check"
-                ? "bg-transparent text-white border-purple-500 hover:bg-purple-500 hover:text-white"
-                : "bg-purple-500 text-black hover:bg-purple-600"
+                ? "bg-transparent text-white border-orange-500 hover:bg-orange-500 hover:text-white"
+                : "bg-orange-500 text-black hover:bg-orange-600"
             }
             onClick={onAction}
           >
@@ -142,6 +142,7 @@ const TasksComponent = () => {
   const updateTask = useUpdateTaskMutation();
   const updateWallet = useSetWalletMutation();
   const demoGroup = -1002175023524;
+  ``;
   const user = useGetUser();
   const { telegramId } = useTelegramId();
   const [isOpen, setIsOpen] = React.useState(false);
@@ -304,7 +305,7 @@ const TasksComponent = () => {
     <div className="h-full overflow-y-auto text-slate-100 p-8 pb-16">
       <div className="mb-8">
         <h2 className="text-xl font-semibold mb-4">Tasks</h2>
-        <div className="bg-taskbg bg-opacity-70 p-3 px-5 rounded-xl ">
+        <div className="bg-taskbg bg-opacity-70 p-2 pt-5 px-5 rounded-xl ">
           {pendingTasks.map((task, index) => (
             <TaskItem
               key={index}
@@ -327,7 +328,7 @@ const TasksComponent = () => {
             <Button
               variant="ghost"
               size="sm"
-              className="hover:bg-purple-500 w-9 p-0"
+              className="hover:bg-orange-500 w-9 p-0"
             >
               {isOpen ? (
                 <ChevronUp className="h-4 w-4" />
