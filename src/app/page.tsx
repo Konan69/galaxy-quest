@@ -81,7 +81,7 @@ export default function LandingClient() {
 
   return (
     <div className="min-h-screen min-w-full text-white p-2 overflow-y-auto pb-16 font-inter">
-      <div className="flex justify-center pt-10 pb-6">
+      <div className="flex items-center justify-center pt-10 pb-6">
         {user?.tasks.ConnectWallet && (
           <TonConnectButton
             className="custom-tonconnect-button"
