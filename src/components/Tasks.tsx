@@ -219,7 +219,9 @@ const TasksComponent = () => {
         ],
       };
 
-      const result = await TonConnectUI.sendTransaction(transaction);
+      const result = await TonConnectUI.sendTransaction(transaction, {
+        modals: ["before", "success", "error"],
+      });
       if (result.boc) {
         taskUpdater(task);
         console.log(result);
