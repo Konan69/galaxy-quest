@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/carousel";
 
 import Image from "next/image";
-import { getRank, Rank, rankThreshold } from "@/lib/rank";
+import { getRank, rankThreshold } from "@/lib/rank";
 import Ion from "@/components/Icons/IonRocket";
 
 import { TonConnectButton, useTonWallet } from "@tonconnect/ui-react";
@@ -82,7 +82,7 @@ export default function LandingClient() {
   return (
     <div className="min-h-screen min-w-full text-white p-2 overflow-y-auto pb-16 font-inter">
       <div className="flex justify-center pt-10 pb-6">
-        {wallet ? <TonConnectButton /> : <div className="mt-4"></div>}
+        {<TonConnectButton />}
       </div>
       <div className=" mx-auto space-y-4">
         <div className="flex flex-col items-center space-y-2 ">
