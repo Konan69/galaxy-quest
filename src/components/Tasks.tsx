@@ -222,17 +222,18 @@ const TasksComponent = () => {
       const result = await TonConnectUI.sendTransaction(transaction);
       if (result.boc) {
         taskUpdater(task);
-      } else {
         console.log(result);
+      } else {
+        console.error(result);
         toast({
           variant: "destructive",
           title: "Error sending transaction",
           description:
-            "There was an error sending the transaction. Please try again.",
+            "There was an error sending  transaction. Please try again.",
         });
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast({
         variant: "destructive",
         title: "Error sending transaction",
