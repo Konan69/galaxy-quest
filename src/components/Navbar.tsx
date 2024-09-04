@@ -3,10 +3,10 @@
 import React from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import Home from "../Icons/Home";
-import Earn from "../Icons/Earn";
-import Shop from "../Icons/Shop";
-import Leaderboard from "../Icons/Leaderboard";
+import Home from "./Icons/Home";
+import Earn from "./Icons/Earn";
+import Shop from "./Icons/Shop";
+import Leaderboard from "./Icons/Leaderboard";
 
 const colorMap: Record<string, string> = {
   Home: "text-Home",

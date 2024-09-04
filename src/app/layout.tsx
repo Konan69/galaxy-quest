@@ -7,7 +7,7 @@ import QueryClientProvider from "@/lib/QueryClientProvider";
 import "@telegram-apps/telegram-ui/dist/styles.css";
 import "normalize.css/normalize.css";
 import "./_assets/globals.css";
-import Navbar from "@/components/NavBar/Navbar";
+import Navbar from "@/components/Navbar";
 
 export const metadata: Metadata = {
   title: "Your Application Title Goes Here",

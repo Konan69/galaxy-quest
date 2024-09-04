@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
   try {
     const user = await prisma.user.findUnique({
       where: { username },
-      include: { tasks: true },
+      include: { tasks: true, purchases: true },
     });
 
     if (!user) {
@@ -52,10 +52,13 @@ export async function POST(req: NextRequest) {
         invitedBy:
           inv_code && ObjectId.isValid(inv_code) ? inv_code : undefined,
         tasks: {
-          create: {}, // This will create a UserTasks record with default values
+          create: {},
+        },
+        purchases: {
+          create: {},
         },
       },
-      include: { tasks: true },
+      include: { tasks: true, purchases: true },
     });
 
     // If there's an invitedBy, update the inviter's invites array

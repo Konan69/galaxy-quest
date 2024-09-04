@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
             increment: points,
           },
         },
-        include: { tasks: true },
+        include: { tasks: true, purchases: true },
       }),
     ]);
 

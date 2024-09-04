@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useGetUserQuery, useRegisterUserMutation } from "@/lib/queries";
 import { useInitData } from "@telegram-apps/sdk-react";
-import { useTelegramId } from "@/components/Store/userStore";
+import { usePFPStore, useTelegramId } from "@/components/Store/userStore";
 import { useGetUser } from "@/hooks/useCache";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar } from "@/components/ui/avatar";
@@ -28,7 +28,7 @@ export default function LandingClient() {
   const inv_code = initData?.startParam;
   const user = useGetUser();
   const wallet = useTonWallet();
-
+  const { selectedPfp } = usePFPStore();
   useGetUserQuery(username!);
 
   const { setTelegramId } = useTelegramId();
@@ -86,13 +86,14 @@ export default function LandingClient() {
       </div>
       <div className=" mx-auto space-y-4">
         <div className="flex flex-col items-center space-y-2 ">
-          <Avatar className="w-28 h-28 border-2 border-white relative p-6">
-            <div className="absolute inset-6  overflow-hidden">
+          <Avatar className="w-28 h-28 border-2 border-white relative ">
+            <div className="absolute inset-1  overflow-hidden">
               <Image
-                src="/Asronaut.svg"
+                src={selectedPfp ? selectedPfp : "/Asronaut.svg"}
                 alt="Astro"
                 layout="fill"
-                objectFit="cover"
+                objectFit="contain"
+                className="rounded-full"
               />
             </div>
           </Avatar>

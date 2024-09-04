@@ -3,7 +3,7 @@ import { useToast } from "@/components/ui/use-toast";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 
 interface AddPointsData {
   username: string;
@@ -181,4 +181,32 @@ export const useSetWalletMutation = () => {
       console.error(error);
     },
   });
+};
+
+const purchase = async ({
+  username,
+  itemKey,
+  price,
+}: {
+  username: string;
+  itemKey: string;
+  price: number;
+}) => {
+  const { data } = await axios.post(`/api/shop`, { username, itemKey, price });
+  return data;
+};
+export const usePurchase = () => {
+  const queryClient = useQueryClient();
+
+  const { mutateAsync } = useMutation({
+    mutationFn: purchase,
+    onSuccess: (data) => {
+      queryClient.setQueryData(["user"], data);
+    },
+    onError: (error) => {
+      console.error(error);
+    },
+  });
+
+  return { mutateAsync };
 };

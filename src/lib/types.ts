@@ -1,6 +1,7 @@
 import {
   User as PrismaUser,
   UserTasks as PrismaUserTasks,
+  UserPurchases,
 } from "@prisma/client";
 
 export type IconProps = {
@@ -12,6 +13,7 @@ export interface UserTasks extends PrismaUserTasks {}
 
 export interface UserWithTasks extends PrismaUser {
   tasks: UserTasks;
+  purchases: UserPurchases;
 }
 
 export interface UserStore {

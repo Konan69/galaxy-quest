@@ -14,31 +14,26 @@ generator client {
 }
 
 model User {
-  id        String     @id @default(auto()) @map("_id") @db.ObjectId
-  username  String     @unique
-  points    Int        @default(0)
-  wallet    String?    @default("")
-  invitedBy String?    @db.ObjectId
-  invites   Int        @default(0)
-  purchases Purchase[]
+  id        String         @id @default(auto()) @map("_id") @db.ObjectId
+  username  String         @unique
+  points    Int            @default(0)
+  wallet    String?        @default("")
+  invitedBy String?        @db.ObjectId
+  invites   Int            @default(0)
+  purchases UserPurchases?
   tasks     UserTasks?
 }
 
-model Item {
-  id        String     @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  price     Int
-  purchases Purchase[]
-}
+model UserPurchases {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  username String @unique
 
-model Purchase {
-  id     String @id @default(auto()) @map("_id") @db.ObjectId
-  userId String @db.ObjectId
-  itemId String @db.ObjectId
-  User   User   @relation(fields: [userId], references: [id])
-  Item   Item   @relation(fields: [itemId], references: [id])
+  Moby    Boolean @default(false)
+  Coby    Boolean @default(false)
+  Remilio Boolean @default(false)
+  Keycat  Boolean @default(false)
 
-  @@unique([userId, itemId])
+  user User @relation(fields: [username], references: [username])
 }
 
 model UserTasks {

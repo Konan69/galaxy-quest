@@ -18,6 +18,16 @@ export const useUserStore = create<UserStore>()(
   ),
 );
 
+type StoreState = {
+  selectedPfp: string | null;
+  setSelectedPfp: (src: string) => void;
+};
+
+export const usePFPStore = create<StoreState>((set) => ({
+  selectedPfp: null,
+  setSelectedPfp: (src: string) => set({ selectedPfp: src }),
+}));
+
 interface InitData {
   telegramId: number | null;
   error: Error | null;

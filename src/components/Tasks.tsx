@@ -251,7 +251,7 @@ const TasksComponent = () => {
       taskUpdater(task);
     }
     if (task.id === "EarlyReward") {
-      setTimeout(() => taskUpdater(task), 3000);
+      setTimeout(() => taskUpdater(task), 1000);
     }
     if (task.id === "Invite5") {
       user?.invites! >= 5
