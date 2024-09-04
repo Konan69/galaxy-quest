@@ -84,6 +84,23 @@ body {
   button[data-tc-connect-button="true"] svg {
     display: none; /* Hide the SVG element */
   }
+
+  .custom-tonconnect-button button {
+    background-color: black;
+    color: white;
+    border: 1px solid white;
+    border-radius: 20px;
+    width: 6rem;
+  }
+  .custom-tonconnect-button .go1487791704 {
+    color: white !important;
+    margin: auto;
+    font-size: 14px !important;
+  }
+
+  .custom-tonconnect-button button:hover {
+    background-color: #333;
+  }
 }
 :root {
   --progress-background: linear-gradient(

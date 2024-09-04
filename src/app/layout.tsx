@@ -10,7 +10,7 @@ import "./_assets/globals.css";
 import Navbar from "@/components/Navbar";
 
 export const metadata: Metadata = {
-  title: "Your Application Title Goes Here",
+  title: "Pugs",
   description: "Your application description goes here",
 };
 
@@ -18,7 +18,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="en">
       <body
-        className="min-h-screen min-w-full bg-cover bg-repeat-x bg-left-top sm:bg-contain md:bg-cover lg:bg-fixed"
+        className="min-h-screen min-w-full bg-cover bg-repeat-x bg-fixed "
         style={{
           backgroundImage: "url(/bg.png)",
         }}
