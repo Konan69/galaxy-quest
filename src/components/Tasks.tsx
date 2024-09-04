@@ -104,11 +104,11 @@ const TaskItem = ({
           className={`p-2 rounded-full ${completed ? "bg-green-700" : "bg-tasks"}`}
         >
           <Icon
-            className={`w-6 h-6 ${completed ? "text-green-300" : "text-white"}`}
+            className={`w-5 h-5 ${completed ? "text-green-300" : "text-white"}`}
           />
         </div>
         <div>
-          <p className="text-white text-m font-semibold">{text}</p>
+          <p className="text-white text-sm font-semibold">{text}</p>
           <p
             className={` text-xs ${completed ? "text-green-300" : "text-slate-200"}`}
           >
