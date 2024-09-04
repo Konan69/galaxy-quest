@@ -99,7 +99,7 @@ const PfpComponent = ({
             objectFit="cover"
           />
         </div>
-        <div className="bg-panel pl-2 pb-2 flex flex-col">
+        <div className="bg-panel pl-2 pb-2 flex flex-col rounded-b-xl">
           <div className="text-white text-sm font-normal pb-2">{name}</div>
           <button
             onClick={isPurchased ? handleSelect : onAction}

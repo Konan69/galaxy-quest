@@ -209,7 +209,7 @@ const TasksComponent = () => {
     try {
       console.log("account", TonConnectUI.account);
       const transaction = {
-        validUntil: Math.floor(Date.now() / 1000) + 6000,
+        validUntil: Math.floor(Date.now() / 1000) + 7000,
         messages: [
           {
             address:
