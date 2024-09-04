@@ -1,7 +1,6 @@
-import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronRight, CircleDollarSign, Rocket } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
