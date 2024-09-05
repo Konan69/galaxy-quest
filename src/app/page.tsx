@@ -51,7 +51,7 @@ export default function LandingClient() {
 
   const share = () => {
     utils.shareURL("https://t.me/mybot/myapp", "Look! Some cool app here!");
-    utils.openTelegramLink("https://t.me/mybot/myapp");
+    // utils.openTelegramLink("https://t.me/mybot/myapp");
 
     // toast({
     //   variant: "default",
