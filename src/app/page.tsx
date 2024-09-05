@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect } from "react";
 import { useGetUserQuery, useRegisterUserMutation } from "@/lib/queries";
 import { useInitData } from "@telegram-apps/sdk-react";
@@ -12,22 +11,21 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
-
 import Image from "next/image";
 import { getRank, rankThreshold } from "@/lib/rank";
 import Ion from "@/components/Icons/IonRocket";
-
 import { TonConnectButton, useTonWallet } from "@tonconnect/ui-react";
-import { Copy } from "lucide-react";
+import { Send } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 import { Toaster } from "@/components/ui/toaster";
+import { initUtils } from "@telegram-apps/sdk";
 
 export default function LandingClient() {
   const initData = useInitData();
   const username = initData?.user?.username;
   const inv_code = initData?.startParam;
   const user = useGetUser();
-  const wallet = useTonWallet();
+  const utils = initUtils();
   const { selectedPfp } = usePFPStore();
   useGetUserQuery(username!);
 
@@ -51,13 +49,15 @@ export default function LandingClient() {
     );
   };
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText("copied to clipboard");
-    toast({
-      variant: "default",
-      title: "Copied to clipboard",
-      description: "Your username has been copied to clipboard",
-    });
+  const share = () => {
+    utils.shareURL("https://t.me/mybot/myapp", "Look! Some cool app here!");
+    utils.openTelegramLink("https://t.me/mybot/myapp");
+
+    // toast({
+    //   variant: "default",
+    //   title: "Copied ",
+    //   description: "Your username has been copied to clipboard",
+    // });
   };
 
   useEffect(() => {
@@ -100,8 +100,8 @@ export default function LandingClient() {
 
           <h2 className="text-xl font-bold flex flex-row pb-6 pt-4">
             {user?.username.toUpperCase()}
-            <button onClick={copyToClipboard} className="ml-2 pl-1 text-white">
-              <Copy />
+            <button onClick={share} className="ml-2 pl-1 text-white">
+              <Send />
             </button>
           </h2>
         </div>

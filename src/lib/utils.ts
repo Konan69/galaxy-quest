@@ -13,3 +13,6 @@ declare global {
 export const prisma = globalThis.prisma || new PrismaClient();
 
 if (process.env.NODE_ENV !== "production") globalThis.prisma = prisma;
+
+// utils.openTelegramLink('https://t.me/heyqbnk');
+// utils.shareURL('https://t.me/mybot/myapp', 'Look! Some cool app here!');
