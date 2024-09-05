@@ -23,10 +23,18 @@ type StoreState = {
   setSelectedPfp: (src: string) => void;
 };
 
-export const usePFPStore = create<StoreState>((set) => ({
-  selectedPfp: null,
-  setSelectedPfp: (src: string) => set({ selectedPfp: src }),
-}));
+export const usePFPStore = create<StoreState>()(
+  persist(
+    (set) => ({
+      selectedPfp: null,
+      setSelectedPfp: (src) => set({ selectedPfp: src }),
+    }),
+    {
+      name: "pfp-storage",
+      partialize: (state) => ({ selectedPfp: state.selectedPfp }),
+    },
+  ),
+);
 
 interface InitData {
   telegramId: number | null;
