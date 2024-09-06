@@ -14,7 +14,7 @@ import {
 import Image from "next/image";
 import { getRank, rankThreshold } from "@/lib/rank";
 import Ion from "@/components/Icons/IonRocket";
-import { TonConnectButton, useTonWallet } from "@tonconnect/ui-react";
+import { TonConnectButton } from "@tonconnect/ui-react";
 import { Send } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 import { Toaster } from "@/components/ui/toaster";
@@ -24,15 +24,15 @@ export default function LandingClient() {
   const initData = useInitData();
   const username = initData?.user?.username;
   const inv_code = initData?.startParam;
-  const user = useGetUser();
   const utils = initUtils();
   const { selectedPfp } = usePFPStore();
-  useGetUserQuery(username!);
+  const fetchuser = useGetUserQuery(username!);
 
-  const { setTelegramId } = useTelegramId();
   const createUserMutation = useRegisterUserMutation();
   const progress =
-    (user?.points! / rankThreshold(getRank(user?.points as number))) * 100;
+    (fetchuser.data?.points! /
+      rankThreshold(getRank(fetchuser.data?.points as number))) *
+    100;
 
   const GradientProgressBar = ({ value }: { value: number }) => {
     return (
@@ -61,17 +61,19 @@ export default function LandingClient() {
   };
 
   useEffect(() => {
-    if (!user && username) {
+    if (fetchuser.isSuccess === false) {
+      console.log(fetchuser);
       createUserMutation.mutate({ username, inv_code } as any);
-      setTelegramId(initData?.user?.id);
+    } else {
     }
-    if (username) {
-      setTelegramId(initData?.user?.id);
-    }
-  }, [username]);
+  }, []);
+
+  if (fetchuser.isLoading)
+    return <div className="text-center text-white">Loading...</div>;
 
   if (createUserMutation.isPending)
     return <div className="text-center text-white">Loading...</div>;
+
   if (!username)
     return (
       <div className="text-center text-white">
@@ -99,7 +101,7 @@ export default function LandingClient() {
           </Avatar>
 
           <h2 className="text-xl font-bold flex flex-row pb-6 pt-4">
-            {user?.username.toUpperCase()}
+            {fetchuser.data?.username.toUpperCase()}
             <button onClick={share} className="ml-2 pl-1 text-white">
               <Send />
             </button>
@@ -114,7 +116,7 @@ export default function LandingClient() {
             <CardContent className="px-4 py-1 flex flex-row">
               <div className="flex flex-col w-[70%] ">
                 <div className="text-lg font-sans text-white mb-2">
-                  {getRank(user?.points as number)}
+                  {getRank(fetchuser.data?.points as number)}
                 </div>
                 <div className="flex items-center ">
                   <div className="flex-grow min-w-32 ">
@@ -122,8 +124,8 @@ export default function LandingClient() {
                       <GradientProgressBar value={progress} />
                     </div>
                     <div className=" text-base text-white flex justify-end mt-2">
-                      {user?.points}/
-                      {rankThreshold(getRank(user?.points as number))}
+                      {fetchuser.data?.points}/
+                      {rankThreshold(getRank(fetchuser.data?.points as number))}
                     </div>
                   </div>
                 </div>

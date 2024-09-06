@@ -28,14 +28,14 @@ const Games: Game[] = [
     link: "/shooter",
     index: 0,
   },
-  {
-    name: "Plinko",
-    icon: Coin,
-    category: "Arcade",
-    image: "/Plinko.png",
-    link: "/plinko",
-    index: 1,
-  },
+  // {
+  //   name: "Plinko",
+  //   icon: Coin,
+  //   category: "Arcade",
+  //   image: "/Plinko.png",
+  //   link: "/plinko",
+  //   index: 1,
+  // },
 ];
 
 const GameCard: React.FC<Game> = ({
@@ -79,7 +79,7 @@ const GameCard: React.FC<Game> = ({
 export const GamesComponent = () => {
   return (
     <Carousel className="w-full ">
-      <CarouselContent className=" flex mx-2 gap-x-2">
+      <CarouselContent className=" flex justify-center gap-x-4 ">
         {Games.map((game, index) => (
           <CarouselItem key={index} className=" basis-auto ">
             <GameCard {...game} key={index} />
