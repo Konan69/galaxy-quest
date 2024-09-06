@@ -33,6 +33,7 @@ import {
 
 import X from "./Icons/X";
 import Ton from "./Icons/Ton";
+import { initUtils } from "@telegram-apps/sdk";
 
 const tasks = [
   {
@@ -139,10 +140,11 @@ const TaskItem = ({
 
 const TasksComponent = () => {
   const { toast } = useToast();
+  const utils = initUtils();
   const updateTask = useUpdateTaskMutation();
   const updateWallet = useSetWalletMutation();
   const demoGroup = -1002175023524;
-  ``;
+
   const user = useGetUser();
   const { telegramId } = useTelegramId();
   const [isOpen, setIsOpen] = React.useState(false);
@@ -265,6 +267,8 @@ const TasksComponent = () => {
           });
     }
     if (task.id === "SubTgram") {
+      utils.openTelegramLink("https://t.me/mybot/myapp");
+
       checkMember(task);
     }
     if (task.id === "TX") {

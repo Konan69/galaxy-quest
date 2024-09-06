@@ -51,13 +51,13 @@ export default function LandingClient() {
 
   const share = () => {
     utils.shareURL("https://t.me/mybot/myapp", "Look! Some cool app here!");
-    // utils.openTelegramLink("https://t.me/mybot/myapp");
+    navigator.clipboard.writeText(`https://t.me/mybot?startApp=${inv_code}`);
 
-    // toast({
-    //   variant: "default",
-    //   title: "Copied ",
-    //   description: "Your username has been copied to clipboard",
-    // });
+    toast({
+      variant: "default",
+      title: "Shared! ",
+      description: "your invite link has been copied to clipboard",
+    });
   };
 
   useEffect(() => {

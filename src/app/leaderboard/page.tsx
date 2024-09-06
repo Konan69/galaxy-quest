@@ -12,6 +12,21 @@ const Leaderboard = () => {
       <div className="w-full pt-8 pb-6 flex justify-center text-3xl font-bold">
         Leaderboard
       </div>
+
+      <Card className=" border-none text-white">
+        <CardHeader className="p-0 bg-Lbcard">
+          <div className="space-y-2 border-bgdark border-2">
+            <div className="flex justify-between text-lg px-6 py-4 ">
+              <span>Rank</span>
+              <span>Username</span>
+              <span>Points</span>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="pt-6 pb-96 bg-tasks rounded-none">
+          <div> Coming soon...</div>
+        </CardContent>
+      </Card>
       <div className="px-4">
         <Card className="bg-tasks bg-opacity-70 border-none rounded-3xl text-white">
           <CardContent className="p-4">
@@ -29,20 +44,6 @@ const Leaderboard = () => {
         </Card>
         {/* <div className="text-sm">Invites: {user?.invites}</div> */}
       </div>
-      <Card className=" border-none text-white">
-        <CardHeader className="p-0 bg-Lbcard">
-          <div className="space-y-2 border-bgdark border-2">
-            <div className="flex justify-between text-lg px-6 py-4 ">
-              <span>Rank</span>
-              <span>Username</span>
-              <span>Points</span>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="pt-6 bg-tasks rounded-none">
-          <div> Coming soon...</div>
-        </CardContent>
-      </Card>
     </div>
   );
 };

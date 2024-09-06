@@ -44,10 +44,8 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const user = await prisma.user.upsert({
-      where: { username },
-      update: {},
-      create: {
+    const user = await prisma.user.create({
+      data: {
         username,
         invitedBy:
           inv_code && ObjectId.isValid(inv_code) ? inv_code : undefined,

@@ -1,11 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 datasource db {
-  provider = "mongodb"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -14,36 +8,33 @@ generator client {
 }
 
 model User {
-  id        String         @id @default(auto()) @map("_id") @db.ObjectId
+  id        String         @id @default(cuid())
   username  String         @unique
   points    Int            @default(0)
-  wallet    String?        @default("")
-  invitedBy String?        @db.ObjectId
+  wallet    String         @default("")
+  invitedBy String?
   invites   Int            @default(0)
   purchases UserPurchases?
   tasks     UserTasks?
 }
 
 model UserPurchases {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  username String @unique
-
-  Moby    Boolean @default(false)
-  Coby    Boolean @default(false)
-  Remilio Boolean @default(false)
-  Keycat  Boolean @default(false)
-
-  user User @relation(fields: [username], references: [username])
+  id       String  @id @default(cuid())
+  username String  @unique
+  Moby     Boolean @default(false)
+  Coby     Boolean @default(false)
+  Remilio  Boolean @default(false)
+  Keycat   Boolean @default(false)
+  user     User    @relation(fields: [username], references: [username])
 }
 
 model UserTasks {
-  id            String  @id @default(auto()) @map("_id") @db.ObjectId
+  id            String  @id @default(cuid())
   username      String  @unique
   EarlyReward   Boolean @default(false)
   FollowX       Boolean @default(false)
   SubTgram      Boolean @default(false)
   Invite5       Boolean @default(false)
   ConnectWallet Boolean @default(false)
-
-  user User @relation(fields: [username], references: [username])
+  user          User    @relation(fields: [username], references: [username])
 }
