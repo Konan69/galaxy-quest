@@ -312,7 +312,7 @@ const TasksComponent = () => {
     <div className="h-full overflow-y-auto text-slate-100 p-8 pb-16">
       <div className="mb-8">
         <h2 className="text-xl font-semibold mb-4">Tasks</h2>
-        <div className="bg-taskbg bg-opacity-70  pt-3 px-3 rounded-xl ">
+        <div className="bg-taskbg bg-opacity-70 pb-1 pt-3 px-3 rounded-xl ">
           {pendingTasks.map((task, index) => (
             <TaskItem
               key={index}

@@ -61,7 +61,6 @@ export default function LandingClient() {
   };
 
   useEffect(() => {
-    // Only trigger mutation if user data is not present
     if (!fetchuser.isLoading && (!fetchuser.isSuccess || !fetchuser.data)) {
       console.log("User not found, creating user:", fetchuser);
       createUserMutation.mutate({ username, inv_code } as any);
@@ -69,9 +68,8 @@ export default function LandingClient() {
   }, [fetchuser.isLoading, fetchuser.isSuccess, fetchuser.data]);
 
   if (
-    fetchuser.isLoading ||
     createUserMutation.isPending ||
-    fetchuser.isFetching
+    (fetchuser.isFetching && !fetchuser.isRefetching)
   ) {
     return (
       <div className="text-center z-[100] bg-black h-screen text-white">
