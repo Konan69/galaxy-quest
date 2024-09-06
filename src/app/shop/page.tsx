@@ -1,3 +1,4 @@
+import Navbar from "@/components/Navbar";
 import ShopComponent from "@/components/Shop";
 
 export default function Shop() {
@@ -7,6 +8,7 @@ export default function Shop() {
         Shop
       </div>
       <ShopComponent />
+      <Navbar />
     </>
   );
 }

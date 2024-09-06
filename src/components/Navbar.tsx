@@ -56,7 +56,7 @@ export default function Navbar() {
   ];
 
   return (
-    <div className="fixed bottom-0 min-w-full flex justify-around items-center z-10 text-xs bg-customdark opacity-90 h-14 px-4 py-10">
+    <div className="fixed bottom-0 min-w-full flex justify-around items-center z-1 text-xs bg-customdark opacity-90 h-14 px-4 py-10">
       {navItems.map((item) => (
         <NavItem key={item.href} {...item} isActive={pathname === item.href} />
       ))}

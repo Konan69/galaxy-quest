@@ -26,7 +26,6 @@ export default function RootLayout({ children }: PropsWithChildren) {
         <QueryClientProvider>
           <div className="relative min-h-screen pb-16">
             <Root>{children}</Root> {/* Main content */}
-            <Navbar />
           </div>
         </QueryClientProvider>
       </body>

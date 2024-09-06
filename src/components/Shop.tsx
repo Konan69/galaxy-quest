@@ -8,6 +8,7 @@ import { useGetUser } from "@/hooks/useCache";
 import { toast } from "./ui/use-toast";
 import { Toaster } from "./ui/toaster";
 import { usePFPStore } from "./Store/userStore";
+import Navbar from "./Navbar";
 const ShopNav = ({ activeTab, setActiveTab }: any) => {
   const user = useGetUser();
   return (
