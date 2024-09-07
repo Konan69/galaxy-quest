@@ -111,7 +111,7 @@ const PfpComponent = ({
           <div className="pr-2 my-auto ">
             <button
               onClick={isPurchased ? handleSelect : onAction}
-              className={` my-auto rounded-md h-6 w-16 text-xs ${
+              className={` my-auto rounded-md h-6 w-16 text-xs font-bold ${
                 isPurchased && selectedPfp === src
                   ? "bg-gray-600"
                   : isPurchased
