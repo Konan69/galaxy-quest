@@ -39,7 +39,7 @@ const ShopNav = ({ activeTab, setActiveTab }: any) => {
           Skins
         </motion.button>
       </nav>
-      <div className="flex justify-end px-4 py-0 mr-4 place-items-center bg-Leaderboard text-black text-sm">
+      <div className="flex justify-end px-4 py-0 mr-4 place-items-center bg-Leaderboard text-black text-sm rounded-sm">
         {`GP: ${user?.points}`}
       </div>
     </div>
@@ -89,7 +89,7 @@ const PfpComponent = ({
   };
 
   return (
-    <Card className="flex flex-col bg-transparent border-none border-bgdark w-44 h-52 relative">
+    <Card className="flex flex-col bg-transparent  border-bgdark border-2 w-full h-52 relative">
       <CardContent className="p-0 h-full">
         <div className="relative rounded-t-xl h-[70%] w-full overflow-hidden">
           <Image
@@ -100,24 +100,32 @@ const PfpComponent = ({
             objectFit="cover"
           />
         </div>
-        <div className="bg-panel pl-2 pb-2 flex flex-col rounded">
-          <div className="text-white text-sm font-normal pb-2">{name}</div>
-          <button
-            onClick={isPurchased ? handleSelect : onAction}
-            className={`mx-auto rounded-md w-[60%] py-1 ${
-              isPurchased && selectedPfp === src
-                ? "bg-gray-600"
+        <div className="bg-panel pl-2 pb-2 pt-1 flex flex-row rounded h-[30%]">
+          <div className="w-[80%]">
+            <div className="text-white text-sm font-normal pb-1">{name}</div>
+            <div className="flex flex-row">
+              <div className="text-gray-400 text-sm ">GP</div>
+              <div className="text-white pl-1 text-sm">{price}</div>
+            </div>
+          </div>
+          <div className="pr-2 my-auto ">
+            <button
+              onClick={isPurchased ? handleSelect : onAction}
+              className={` my-auto rounded-md h-6 w-16 text-xs ${
+                isPurchased && selectedPfp === src
+                  ? "bg-gray-600"
+                  : isPurchased
+                    ? "bg-orange-600"
+                    : "bg-orange-600"
+              }`}
+            >
+              {isPurchased && selectedPfp === src
+                ? "Selected"
                 : isPurchased
-                  ? "bg-orange-600"
-                  : "bg-orange-600"
-            }`}
-          >
-            {isPurchased && selectedPfp === src
-              ? "Selected"
-              : isPurchased
-                ? "Select"
-                : `${price} GP`}
-          </button>
+                  ? "Select"
+                  : `Buy`}
+            </button>
+          </div>
         </div>
       </CardContent>
     </Card>
@@ -132,7 +140,6 @@ const ShopComponent = () => {
   const [activeTab, setActiveTab] = useState("Pfps");
   const user = useGetUser();
   const { mutateAsync } = usePurchase();
-  const { selectedPfp } = usePFPStore();
 
   const isItemPurchased = (itemName: string): boolean => {
     return user?.purchases?.[itemName as keyof typeof user.purchases] === true;
@@ -171,7 +178,7 @@ const ShopComponent = () => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.2 }}
-          className="w-auto pr-4 grid grid-cols-2 gap-x-4 gap-y-4"
+          className="w-full px-4 grid grid-cols-2 gap-x-4 gap-y-4"
         >
           {activeTab === "Pfps" ? (
             PFPs.map((PFP, index) => (
